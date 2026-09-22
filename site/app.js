@@ -47,7 +47,7 @@
   })();
 
   var state = {
-    mode: storage("pp_mode") || "flashcards",
+    mode: storage("pp_mode") || "guide",
     category: storage("pp_cat") || "all",
     flashOrder: [],
     flashIndex: 0,
@@ -87,6 +87,20 @@
     return '<p style="font-size:11px;color:var(--ink-faint);text-align:center;margin:6px 0 0;line-height:1.4;">' +
       'Foto: ' + d.foto.author + " &middot; " + d.foto.license +
       ' &middot; <a href="' + d.foto.source + '" target="_blank" rel="noopener">fonte</a></p>';
+  }
+  function detailSectionsHTML(d) {
+    return [
+      ["Características clínicas", d.clinico],
+      ["Localização típica", d.localizacao],
+      ["Causa / etiologia", d.etiologia],
+      ["Sintomas", d.sintomas],
+      ["Testes / vitalidade", d.testes],
+      ["Radiografia", d.radiografico],
+      ["Tratamento", d.tratamento],
+      ["Como diferenciar", d.diferenciar]
+    ].map(function (sec) {
+      return '<div class="bk"><span class="lbl">' + sec[0] + "</span><p>" + sec[1] + "</p></div>";
+    }).join("");
   }
 
   /* ---------------- chips ---------------- */
@@ -143,18 +157,7 @@
     document.getElementById("frontImg").outerHTML = mediaHTML(d).replace('class="dg-frame', 'id="frontImg" class="dg-frame');
     document.getElementById("frontResumo").textContent = d.resumo;
     document.getElementById("backName").textContent = d.nome;
-    document.getElementById("backBody").innerHTML = [
-      ["Características clínicas", d.clinico],
-      ["Localização típica", d.localizacao],
-      ["Causa / etiologia", d.etiologia],
-      ["Sintomas", d.sintomas],
-      ["Testes / vitalidade", d.testes],
-      ["Radiografia", d.radiografico],
-      ["Tratamento", d.tratamento],
-      ["Como diferenciar", d.diferenciar]
-    ].map(function (sec) {
-      return '<div class="bk"><span class="lbl">' + sec[0] + "</span><p>" + sec[1] + "</p></div>";
-    }).join("") + creditHTML(d);
+    document.getElementById("backBody").innerHTML = detailSectionsHTML(d) + creditHTML(d);
   }
   function stepFlash(delta) {
     var list = filteredDiseases();
@@ -242,6 +245,29 @@
     document.getElementById("quizFinalMsg").textContent = pct + "% de acertos. " + msg;
   }
 
+  /* ---------------- guide (apostila) ---------------- */
+  function renderGuide() {
+    var box = document.getElementById("guideList");
+    var cats = state.category === "all" ? CATS : CATS.filter(function (c) { return c.id === state.category; });
+    var html = "";
+    cats.forEach(function (c) {
+      var items = DATA.diseases.filter(function (d) { return d.categoria === c.id; });
+      if (!items.length) return;
+      html += '<h2 class="guide-cat" style="color:' + CAT_COLOR[c.id] + '">' + c.label + '</h2>';
+      items.forEach(function (d) {
+        html += '<article class="guide-card">'
+          + '<div class="guide-media">' + mediaHTML(d) + creditHTML(d) + '</div>'
+          + '<div class="guide-content">'
+          + '<h3>' + d.nome + '</h3>'
+          + '<p class="resumo" style="margin:0 0 10px;">' + d.resumo + '</p>'
+          + detailSectionsHTML(d)
+          + '</div>'
+          + '</article>';
+      });
+    });
+    box.innerHTML = html || '<p class="empty-msg">Nenhuma doença nesta categoria.</p>';
+  }
+
   /* ---------------- table ---------------- */
   function renderTable() {
     var q = (document.getElementById("tableSearch").value || "").toLowerCase();
@@ -252,16 +278,19 @@
     });
     var tbody = document.getElementById("tableBody");
     if (!list.length) {
-      tbody.innerHTML = '<tr><td colspan="6" class="empty-msg">Nenhuma doença encontrada.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="9" class="empty-msg">Nenhuma doença encontrada.</td></tr>';
       return;
     }
     tbody.innerHTML = list.map(function (d) {
       return "<tr>"
         + '<td class="cat-dot"><span class="dot" style="background:' + CAT_COLOR[d.categoria] + '" title="' + CAT_LABEL[d.categoria] + '"></span></td>'
         + '<td class="name">' + d.nome + "</td>"
-        + "<td>" + d.aparenciaCurta + "</td>"
-        + "<td>" + d.localizacao + "</td>"
-        + "<td>" + d.causaCurta + "</td>"
+        + "<td>" + (d.dor || "") + "</td>"
+        + "<td>" + (d.mobilidade || "") + "</td>"
+        + "<td>" + (d.percussao || "") + "</td>"
+        + "<td>" + (d.necrose || "") + "</td>"
+        + "<td>" + (d.vitalidade || "") + "</td>"
+        + "<td>" + (d.radiografiaCurta || d.radiografico || "") + "</td>"
         + "<td>" + d.tratamentoCurto + "</td>"
         + "</tr>";
     }).join("");
@@ -269,6 +298,7 @@
 
   /* ---------------- mode switching ---------------- */
   function renderAll() {
+    if (state.mode === "guide") { renderGuide(); }
     if (state.mode === "flashcards") { if (!state.flashOrder.length) resetFlash(); renderFlash(); }
     if (state.mode === "quiz") { if (!state.quizOrder.length) resetQuiz(); renderQuiz(); }
     if (state.mode === "table") { renderTable(); }
@@ -280,7 +310,7 @@
       b.classList.toggle("active", on);
       b.setAttribute("aria-selected", on ? "true" : "false");
     });
-    ["flashcards", "quiz", "table"].forEach(function (m) {
+    ["guide", "flashcards", "quiz", "table"].forEach(function (m) {
       document.getElementById("view-" + m).classList.toggle("active", m === mode);
     });
     renderAll();

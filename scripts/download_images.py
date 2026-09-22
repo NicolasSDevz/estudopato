@@ -3,7 +3,9 @@
 no site, redimensiona/recomprime e grava credits.json com a atribuicao."""
 import json
 import os
+import time
 import urllib.request
+import urllib.error
 
 from PIL import Image
 
@@ -27,10 +29,25 @@ IMAGES = [
          source="https://commons.wikimedia.org/wiki/File:Abscessed_tooth_periapical_radiograph.jpg",
          caption="Radiografia periapical do dente 3.6 mostrando abscesso periapical envolvendo as duas raízes."),
     dict(id="granuloma_periapical",
-         url="https://upload.wikimedia.org/wikipedia/commons/c/ca/Granuloma_sotto_dente_gi%C3%A0_devitalizzato_-_visione_di_lastra_su_schermo.jpg",
-         license="CC BY-SA 4.0", author="Anna.Massini",
-         source="https://commons.wikimedia.org/wiki/File:Granuloma_sotto_dente_gi%C3%A0_devitalizzato_-_visione_di_lastra_su_schermo.jpg",
-         caption="Radiografia de dente tratado endodonticamente mostrando granuloma periapical."),
+         url="https://upload.wikimedia.org/wikipedia/commons/4/4e/Chronic_apical_periodontitis.jpg",
+         license="CC BY-SA 3.0", author="Michele Gardini",
+         source="https://commons.wikimedia.org/wiki/File:Chronic_apical_periodontitis.jpg",
+         caption="Radiografia periapical mostrando radioluscência periapical bem definida no ápice radicular, compatível com granuloma periapical em dente não vital."),
+    dict(id="calcificacoes_pulpares",
+         url="https://upload.wikimedia.org/wikipedia/commons/5/5b/X-ray_manual_-_U.S._Army_(1917)_(14734336166).jpg",
+         license="Domínio público", author="U.S. Army / American Roentgen Ray Society (1917, digitalizado pelo Internet Archive)",
+         source="https://commons.wikimedia.org/wiki/File:X-ray_manual_-_U.S._Army_(1917)_(14734336166).jpg",
+         caption="Radiografia histórica (manual do Exército dos EUA, 1917) cuja legenda original identifica um cálculo pulpar (dentículo) radiopaco dentro da câmara pulpar. Imagem antiga, mas é o único registro real e identificado deste achado disponível com licença livre."),
+    dict(id="cisto_residual",
+         url="https://upload.wikimedia.org/wikipedia/commons/f/f8/Torbiel_korzeniowa_po_ekstrakcji_fragmentu_korzenia.jpg",
+         license="CC BY-SA", author="Barte3k",
+         source="https://commons.wikimedia.org/wiki/File:Torbiel_korzeniowa_po_ekstrakcji_fragmentu_korzenia.jpg",
+         caption="Peça cirúrgica: cisto radicular removido junto com um fragmento de raiz dentária após exodontia com curetagem incompleta — o tecido cístico remanescente que caracteriza o cisto residual."),
+    dict(id="trombose_seio_cavernoso",
+         url="https://upload.wikimedia.org/wikipedia/commons/b/bf/Gray571.png",
+         license="Domínio público", author="Henry Vandyke Carter (Gray's Anatomy, 1918)",
+         source="https://commons.wikimedia.org/wiki/File:Gray571.png",
+         caption="Ilustração anatômica clássica (Gray's Anatomy) em corte, mostrando o seio cavernoso e estruturas vizinhas. Usada como referência anatômica — não há fotografia clínica real com licença livre disponível para esta condição."),
     dict(id="cisto_radicular",
          url="https://upload.wikimedia.org/wikipedia/commons/5/5d/Periapical_radiolucency.jpg",
          license="CC BY-SA 4.0", author="Shaimaa Abdellatif",
@@ -61,11 +78,6 @@ IMAGES = [
          license="CC BY 4.0", author="Silva, Bueno, Yamamoto-Silva, Gomez, Peters, Estrela",
          source="https://commons.wikimedia.org/wiki/File:Jaw_lesions_-_Condensing_osteitis_-_Cone_beam_CT.jpg",
          caption="Tomografia cone-beam mostrando osteíte condensante: lesão radiopaca difusa no ápice de molar inferior."),
-    dict(id="osteomielite_garre",
-         url="https://upload.wikimedia.org/wikipedia/commons/3/3c/Garre%27ssclerosingosteomyelitis.jpg",
-         license="CC BY 3.0", author="Gumber, Sharma, Sharma, Gupta, Bhardwaj, Jakhar",
-         source="https://commons.wikimedia.org/wiki/File:Garre%27ssclerosingosteomyelitis.jpg",
-         caption="Radiografia pré-operatória de osteomielite esclerosante de Garré (periostite ossificante)."),
     dict(id="osteite_alveolar",
          url="https://upload.wikimedia.org/wikipedia/commons/1/19/Alveolar_osteitis_labeled_dry_socket.jpg",
          license="CC BY 3.0", author="Beatgoddess",
@@ -77,17 +89,27 @@ IMAGES = [
          source="https://commons.wikimedia.org/wiki/File:Dental_Caries_Cavity_2.JPG",
          caption="Cavidade de cárie profunda em molar — lesão típica que pode causar pulpite reversível."),
     dict(id="pulpite_irreversivel",
-         url="https://upload.wikimedia.org/wikipedia/commons/9/98/Dental_Caries_.jpg",
-         license="CC BY-SA 4.0", author="Ickyvickywiki",
-         source="https://commons.wikimedia.org/wiki/File:Dental_Caries_.jpg",
-         caption="Cárie extensa classe II em molar inferior — lesão compatível com pulpite irreversível."),
+         url="https://upload.wikimedia.org/wikipedia/commons/3/34/Tooth_decay_and_abscess_xray.png",
+         license="CC BY-SA 3.0", author="Coronation Dental Specialty Group",
+         source="https://commons.wikimedia.org/wiki/File:Tooth_decay_and_abscess_xray.png",
+         caption="Radiografia periapical mostrando cárie profunda (seta verde) com radioluscência periapical associada (pontas de seta azuis) — compatível com pulpite irreversível evoluindo para necrose."),
 ]
 
 
-def download(url, dest):
+def download(url, dest, retries=5):
     req = urllib.request.Request(url, headers=HEADERS)
-    with urllib.request.urlopen(req, timeout=30) as resp, open(dest, "wb") as f:
-        f.write(resp.read())
+    for attempt in range(retries):
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp, open(dest, "wb") as f:
+                f.write(resp.read())
+            return
+        except urllib.error.HTTPError as e:
+            if e.code == 429 and attempt < retries - 1:
+                wait = 4 * (attempt + 1)
+                print(f"  (429, aguardando {wait}s antes de tentar de novo...)")
+                time.sleep(wait)
+                continue
+            raise
 
 
 def process():
@@ -97,6 +119,7 @@ def process():
         out_path = os.path.join(OUT_DIR, f"{item['id']}.jpg")
         try:
             download(item["url"], raw_path)
+            time.sleep(1.2)
             im = Image.open(raw_path).convert("RGB")
             w, h = im.size
             max_w = 900

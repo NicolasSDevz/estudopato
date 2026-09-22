@@ -39,11 +39,13 @@ Não há variáveis de ambiente nem dependências — é só HTML/CSS/JS + image
 ## Estrutura
 
 ```
-index.html   página única (flashcards, quiz, tabela)
+index.html   página única (hero + guia/apostila, flashcards, quiz, tabela comparativa)
 styles.css   estilos (tema claro/escuro automático + toggle manual)
 app.js       lógica da aplicação
 data.js      dados das doenças e do quiz (gerado a partir do dataset em /scripts)
 images/      fotos clínicas e radiografias reais, com licença livre (ver créditos)
+Guia_Revisao_Doencas_Polpa_Periapice.pdf   apostila completa (baixável pelo site)
+Planilha_Comparativa_Patologias.pdf        tabela comparativa detalhada (baixável pelo site)
 ```
 
 ## Créditos das imagens
