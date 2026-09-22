@@ -1,0 +1,632 @@
+<title>Patologia da Polpa</title>
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f1e8;
+    --surface:#ffffff;
+    --surface-2:#ece6d4;
+    --surface-3:#e2dabe;
+    --line:#d9d0b4;
+    --ink:#20241c;
+    --ink-soft:#5d6357;
+    --ink-faint:#8a8e7d;
+    --accent:#0f6e5c;
+    --accent-ink:#ffffff;
+    --accent-soft:#dcece5;
+    --danger:#a8402f;
+    --danger-soft:#f3e0da;
+    --gold:#8a6a1c;
+    --gold-soft:#efe6cd;
+    --plum:#7a2f3a;
+    --plum-soft:#f0dfe0;
+    --blue:#385876;
+    --blue-soft:#dee6ec;
+    --film:#0b1220;
+    --shadow:0 1px 2px rgba(30,26,14,.06), 0 8px 24px -12px rgba(30,26,14,.22);
+    --radius-lg:20px;
+    --radius-md:14px;
+    --radius-sm:9px;
+    --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#12181a; --surface:#1a2225; --surface-2:#212b2d; --surface-3:#293436;
+      --line:#333f41; --ink:#eef1ea; --ink-soft:#aab4ac; --ink-faint:#78837e;
+      --accent:#3fae93; --accent-ink:#08201a; --accent-soft:#1c3a34;
+      --danger:#e28271; --danger-soft:#3d2624; --gold:#d3af5a; --gold-soft:#3a3220;
+      --plum:#dd8f9c; --plum-soft:#3a252a; --blue:#8fb3d6; --blue-soft:#22323f;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 30px -14px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#12181a; --surface:#1a2225; --surface-2:#212b2d; --surface-3:#293436;
+    --line:#333f41; --ink:#eef1ea; --ink-soft:#aab4ac; --ink-faint:#78837e;
+    --accent:#3fae93; --accent-ink:#08201a; --accent-soft:#1c3a34;
+    --danger:#e28271; --danger-soft:#3d2624; --gold:#d3af5a; --gold-soft:#3a3220;
+    --plum:#dd8f9c; --plum-soft:#3a252a; --blue:#8fb3d6; --blue-soft:#22323f;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 30px -14px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg); color:var(--ink); font-family:var(--sans);
+    -webkit-font-smoothing:antialiased; padding-inline:16px;
+  }
+  h1,h2,h3{font-family:var(--serif); font-weight:600; text-wrap:balance; margin:0;}
+  .wrap{max-width:920px; margin-inline:auto;}
+  button{font:inherit; color:inherit;}
+  ::selection{background:var(--accent); color:var(--accent-ink);}
+  .sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:6px;}
+  a{color:var(--accent);}
+
+  /* ---------- topbar ---------- */
+  .topbar{padding-block:22px 14px; text-align:center;}
+  .eyebrow{
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent); font-weight:600; margin:0 0 6px;
+  }
+  .topbar h1{font-size:clamp(26px,5vw,34px); line-height:1.1;}
+  .topbar p{margin:8px 0 0; color:var(--ink-soft); font-size:14.5px; max-width:52ch; margin-inline:auto;}
+
+  /* ---------- mode tabs ---------- */
+  .modebar{
+    display:flex; gap:4px; background:var(--surface-2); border:1px solid var(--line);
+    border-radius:999px; padding:4px; max-width:520px; margin:20px auto 14px;
+  }
+  .modebar button{
+    flex:1; border:none; background:transparent; padding:9px 10px; border-radius:999px;
+    font-weight:600; font-size:14px; color:var(--ink-soft); cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    transition:background .15s ease, color .15s ease;
+  }
+  .modebar button svg{width:16px; height:16px; flex:none;}
+  .modebar button.active{background:var(--surface); color:var(--ink); box-shadow:var(--shadow);}
+  .modebar button:hover:not(.active){color:var(--ink);}
+
+  /* ---------- category chips ---------- */
+  .filterbar{
+    display:flex; gap:8px; overflow-x:auto; padding:2px 2px 14px; margin-bottom:6px;
+    scrollbar-width:thin;
+  }
+  .chip{
+    flex:none; border:1px solid var(--line); background:var(--surface); color:var(--ink-soft);
+    padding:7px 14px; border-radius:999px; font-size:13px; font-weight:600; cursor:pointer;
+    white-space:nowrap; transition:.15s ease;
+  }
+  .chip[data-active="true"]{background:var(--ink); color:var(--bg); border-color:var(--ink);}
+  .chip .n{font-family:var(--mono); font-weight:500; opacity:.7; margin-left:5px;}
+
+  main{padding-bottom:56px;}
+  .view{display:none;}
+  .view.active{display:block;}
+
+  /* ================= FLASHCARDS ================= */
+  .deck-meta{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; gap:10px;}
+  .deck-count{font-family:var(--mono); font-size:13px; color:var(--ink-soft);}
+  .iconbtn{
+    border:1px solid var(--line); background:var(--surface); border-radius:10px; padding:8px 12px;
+    cursor:pointer; font-size:13px; font-weight:600; display:flex; align-items:center; gap:6px;
+    color:var(--ink-soft);
+  }
+  .iconbtn:hover{color:var(--ink); border-color:var(--ink-faint);}
+  .iconbtn svg{width:15px; height:15px;}
+
+  .card-stage{perspective:1600px; margin-inline:auto; max-width:420px;}
+  .flashcard{
+    width:100%; aspect-ratio:5/7; background:none; border:none; padding:0; cursor:pointer;
+    display:block;
+  }
+  .flashcard-inner{
+    position:relative; width:100%; height:100%; transition:transform .55s cubic-bezier(.2,.8,.2,1);
+    transform-style:preserve-3d;
+  }
+  .flashcard[data-flipped="true"] .flashcard-inner{transform:rotateY(180deg);}
+  .face{
+    position:absolute; inset:0; backface-visibility:hidden; border-radius:var(--radius-lg);
+    border:1px solid var(--line); background:var(--surface); box-shadow:var(--shadow);
+    display:flex; flex-direction:column; text-align:left; overflow:hidden;
+  }
+  .face.back{transform:rotateY(180deg); overflow-y:auto;}
+  .face.front{align-items:center; justify-content:center; padding:22px 20px 18px; gap:12px;}
+  .cat-tag{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
+    font-weight:600; padding:4px 10px; border-radius:999px;
+  }
+  .dg-frame{
+    width:78%; max-width:230px; border-radius:14px; overflow:hidden; border:1px solid var(--line);
+    box-shadow:0 6px 18px -10px rgba(0,0,0,.4);
+  }
+  .dg-frame svg{display:block; width:100%; height:auto;}
+  .front .hint{color:var(--ink-faint); font-size:12.5px; font-weight:600; margin-top:auto;}
+  .front .resumo{color:var(--ink-soft); font-size:13.5px; text-align:center; max-width:32ch;}
+
+  .face.back .back-head{
+    padding:18px 20px 12px; border-bottom:1px solid var(--line); flex:none;
+  }
+  .face.back .back-head h3{font-size:19px; line-height:1.2;}
+  .face.back .back-body{padding:14px 20px 20px; display:flex; flex-direction:column; gap:12px;}
+  .bk{display:flex; flex-direction:column; gap:3px;}
+  .bk .lbl{
+    font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em;
+    color:var(--accent); font-weight:600;
+  }
+  .bk p{margin:0; font-size:13.3px; line-height:1.5; color:var(--ink);}
+
+  .deck-nav{display:flex; align-items:center; justify-content:center; gap:10px; margin-top:16px;}
+  .btn{
+    border-radius:12px; padding:11px 18px; font-weight:600; font-size:14px; cursor:pointer;
+    border:1px solid var(--line); background:var(--surface); color:var(--ink);
+  }
+  .btn:hover{border-color:var(--ink-faint);}
+  .btn.primary{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+  .btn.ghost{background:transparent;}
+  .btn:disabled{opacity:.4; cursor:not-allowed;}
+  .btn.round{border-radius:50%; width:44px; height:44px; padding:0; display:flex; align-items:center; justify-content:center;}
+  .btn.round svg{width:18px; height:18px;}
+
+  /* ================= QUIZ ================= */
+  .quiz-progress{display:flex; align-items:center; gap:12px; margin-bottom:16px;}
+  .bar{flex:1; height:7px; border-radius:99px; background:var(--surface-2); overflow:hidden;}
+  .bar > span{display:block; height:100%; background:var(--accent); border-radius:99px; transition:width .3s ease;}
+  .score{font-family:var(--mono); font-size:13px; color:var(--ink-soft); white-space:nowrap;}
+  .quiz-card{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-lg);
+    box-shadow:var(--shadow); padding:22px; max-width:620px; margin-inline:auto;
+  }
+  .quiz-media{display:flex; justify-content:center; margin-bottom:16px;}
+  .quiz-media .dg-frame{width:160px;}
+  .quiz-prompt{font-size:16.5px; line-height:1.45; margin:0 0 18px; font-weight:500;}
+  .quiz-options{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .qopt{
+    text-align:left; border:1.5px solid var(--line); background:var(--surface-2); border-radius:12px;
+    padding:12px 14px; cursor:pointer; font-size:13.6px; line-height:1.4; display:flex; gap:10px;
+    align-items:flex-start;
+  }
+  .qopt .k{
+    font-family:var(--mono); font-weight:700; color:var(--ink-faint); flex:none;
+  }
+  .qopt:hover:not([disabled]){border-color:var(--accent);}
+  .qopt[data-state="correct"]{background:var(--accent-soft); border-color:var(--accent); color:var(--ink);}
+  .qopt[data-state="wrong"]{background:var(--danger-soft); border-color:var(--danger); color:var(--ink);}
+  .qopt[disabled]{cursor:default;}
+  .quiz-feedback{
+    margin-top:16px; padding:14px 16px; border-radius:12px; font-size:13.6px; line-height:1.55;
+    background:var(--surface-2); border:1px solid var(--line);
+  }
+  .quiz-feedback b{font-family:var(--serif);}
+  .quiz-feedback.ok{background:var(--accent-soft);}
+  .quiz-feedback.bad{background:var(--danger-soft);}
+  .quiz-foot{display:flex; justify-content:flex-end; margin-top:16px;}
+  .quiz-end{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-lg);
+    box-shadow:var(--shadow); padding:34px 24px; text-align:center; max-width:480px; margin-inline:auto;
+  }
+  .quiz-end .big{font-family:var(--serif); font-size:44px; color:var(--accent);}
+
+  /* ================= TABLE ================= */
+  .table-toolbar{display:flex; margin-bottom:12px;}
+  .search{
+    width:100%; padding:11px 14px; border-radius:12px; border:1px solid var(--line);
+    background:var(--surface); color:var(--ink); font-size:14px;
+  }
+  .table-scroll{overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius-md); background:var(--surface);}
+  table{border-collapse:collapse; width:100%; min-width:820px; font-size:13px;}
+  thead th{
+    text-align:left; font-family:var(--mono); font-size:10.6px; text-transform:uppercase; letter-spacing:.06em;
+    color:var(--ink-soft); background:var(--surface-2); padding:11px 14px; border-bottom:1px solid var(--line);
+    position:sticky; top:0;
+  }
+  tbody td{padding:12px 14px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.45;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:var(--surface-2);}
+  td.name{font-weight:700; white-space:nowrap;}
+  td.cat-dot{width:10px; padding-right:0;}
+  .dot{width:9px; height:9px; border-radius:50%; display:inline-block;}
+  .empty-msg{padding:40px 20px; text-align:center; color:var(--ink-faint); font-size:14px;}
+
+  footer{max-width:920px; margin:10px auto 30px; text-align:center; color:var(--ink-faint); font-size:12px; line-height:1.7;}
+
+  @media (max-width:520px){
+    .quiz-options{grid-template-columns:1fr;}
+    .card-stage{max-width:340px;}
+  }
+</style>
+
+<div class="wrap">
+  <header class="topbar">
+    <p class="eyebrow">Patologia Bucal &middot; UNESC</p>
+    <h1>Doenças da Polpa e do Periápice</h1>
+    <p>Flashcards, quiz e tabela comparativa para revisão de prova — pulpites, alterações periapicais, complicações por disseminação e osteomielites.</p>
+  </header>
+
+  <nav class="modebar" role="tablist" aria-label="Modo de estudo">
+    <button type="button" data-mode="flashcards" class="active" role="tab" aria-selected="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="14" height="14" rx="2"/><path d="M7 3h14v14"/></svg>
+      Flashcards
+    </button>
+    <button type="button" data-mode="quiz" role="tab" aria-selected="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.8-2.2 2-2.4 3.6"/><circle cx="12" cy="16.6" r=".4" fill="currentColor"/></svg>
+      Quiz
+    </button>
+    <button type="button" data-mode="table" role="tab" aria-selected="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10"/></svg>
+      Tabela
+    </button>
+  </nav>
+
+  <div class="filterbar" id="filterbar"></div>
+
+  <main>
+    <!-- FLASHCARDS -->
+    <section class="view active" id="view-flashcards">
+      <div class="deck-meta">
+        <span class="deck-count" id="deckCount">1 / 20</span>
+        <button type="button" class="iconbtn" id="shuffleBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5"/><path d="M4 20 21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg>
+          Embaralhar
+        </button>
+      </div>
+      <div class="card-stage">
+        <button type="button" class="flashcard" id="flashcard" data-flipped="false" aria-label="Cartão de estudo. Toque para ver a resposta.">
+          <div class="flashcard-inner">
+            <div class="face front">
+              <span class="cat-tag" id="frontCat"></span>
+              <div class="dg-frame" id="frontImg"></div>
+              <p class="resumo" id="frontResumo"></p>
+              <span class="hint">toque para virar ↻</span>
+            </div>
+            <div class="face back">
+              <div class="back-head"><h3 id="backName"></h3></div>
+              <div class="back-body" id="backBody"></div>
+            </div>
+          </div>
+        </button>
+      </div>
+      <div class="deck-nav">
+        <button type="button" class="btn round" id="prevBtn" aria-label="Cartão anterior">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button type="button" class="btn primary" id="flipBtn">Virar cartão</button>
+        <button type="button" class="btn round" id="nextBtn" aria-label="Próximo cartão">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section class="view" id="view-quiz">
+      <div id="quizActive">
+        <div class="quiz-progress">
+          <span class="score" id="quizCounter">1 / 35</span>
+          <div class="bar"><span id="quizBar" style="width:0%"></span></div>
+          <span class="score" id="quizScore">Acertos: 0</span>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-media" id="quizMedia" hidden></div>
+          <p class="quiz-prompt" id="quizPrompt"></p>
+          <div class="quiz-options" id="quizOptions"></div>
+          <div class="quiz-feedback" id="quizFeedback" hidden></div>
+          <div class="quiz-foot">
+            <button type="button" class="btn primary" id="quizNext" hidden>Próxima pergunta →</button>
+          </div>
+        </div>
+      </div>
+      <div class="quiz-end" id="quizEnd" hidden>
+        <p class="eyebrow" style="text-align:center">Resultado</p>
+        <div class="big" id="quizFinalScore">0/0</div>
+        <p id="quizFinalMsg" style="color:var(--ink-soft); margin:6px 0 20px;"></p>
+        <button type="button" class="btn primary" id="quizRestart">Refazer questões</button>
+      </div>
+    </section>
+
+    <!-- TABLE -->
+    <section class="view" id="view-table">
+      <div class="table-toolbar">
+        <input type="search" class="search" id="tableSearch" placeholder="Buscar por doença, sintoma, causa…" aria-label="Buscar na tabela">
+      </div>
+      <div class="table-scroll">
+        <table id="dataTable">
+          <thead>
+            <tr>
+              <th></th><th>Doença</th><th>Aparência clínica</th><th>Localização</th><th>Causa</th><th>Tratamento</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Material de revisão baseado nos slides "Doenças da Polpa e Periápice" (Profa. Ângela Maragno) — Patologia Bucal, UNESC.<br>
+    Esquemas ilustrativos autorais no padrão didático de raio-X anotado; não substituem as referências bibliográficas do plano de ensino.
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var DATA = {"categories": [{"id": "pulpar", "label": "Alterações Pulpares"}, {"id": "periapical_aguda", "label": "Alterações Periapicais Agudas"}, {"id": "periapical_cronica", "label": "Alterações Periapicais Crônicas"}, {"id": "disseminacao", "label": "Complicações por Disseminação"}, {"id": "osteomielite", "label": "Osteomielites e Condições Ósseas Correlatas"}], "diseases": [{"id": "pulpite_reversivel", "nome": "Pulpite Reversível", "categoria": "pulpar", "resumo": "Dor curta ao frio/doce, some ao remover o estímulo.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,18.0 50.0,22.0 42.0,18.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#e0935f\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#e0935f\"/></svg>", "clinico": "Dor provocada, súbita, de intensidade leve a moderada e curta duração. Responde mais a estímulos FRIOS, doces e ácidos (inclui refrigerante gelado). A dor CESSA assim que o estímulo e removido. Sem dor espontânea, edema ou febre.", "localizacao": "Câmara pulpar do dente afetado, geralmente associada a cárie inicial, desgaste cervical ou restauração recente.", "etiologia": "Qualquer injuria que atinja a dentina sem necrosar a polpa: cárie incipiente, trauma leve, procedimentos restauradores, desgastes cervicais, irritação química.", "sintomas": "Dor de curta duração, bem localizada, some ao retirar o estímulo.", "testes": "Vitalidade pulpar positiva; percussão negativa; mobilidade normal.", "radiografico": "Nenhuma alteração radiográfica (pode haver cárie/restauração visível).", "tratamento": "Eliminar a causa e proteger o complexo dentino-pulpar (restauração/capeamento). Reavaliar a vitalidade após os sintomas cessarem.", "diferenciar": "Pulpite irreversível: na reversível a dor SOME ao retirar o estímulo; na irreversível a dor CONTINUA mesmo sem o estímulo.", "aparenciaCurta": "Dor de curta duração ao frio, some rápido", "causaCurta": "Cárie inicial / trauma leve / restauração", "tratamentoCurto": "Remover causa + proteger polpa"}, {"id": "pulpite_irreversivel", "nome": "Pulpite Irreversível", "categoria": "pulpar", "resumo": "Dor espontânea e continua; DOI ao calor, ALIVIA com frio.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,32.0 50.0,36.0 42.0,32.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#d94a2b\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#d94a2b\"/></svg>", "clinico": "Dor aguda e acentuada ao estímulo térmico que CONTINUA após a remoção do estímulo -  doi ao CALOR e alivia com FRIO. Piora ao deitar. Em estágios avançados a dor e espontânea, pulsatil e intensa (paciente não dorme). No inicio o dente e bem identificado; com a evolução a dor fica difusa e o paciente não sabe apontar o dente.", "localizacao": "Estágio inicial: dente bem localizado. Estágio avançado: dor difusa (inervação C amielínica dissemina o estímulo).", "etiologia": "Progressao de injuria pulpar não tratada: cárie profunda atingindo a polpa, trauma, procedimentos iatrogênicos.", "sintomas": "Dor espontânea, prolongada, continua, pode ser difusa; exacerbada ao deitar.", "testes": "Vitalidade positiva (em níveis mais baixos) ou ausente em fase final; percussão e mobilidade normais na maioria dos casos.", "radiografico": "Geralmente nenhuma alteração; pode haver discreto aumento do espaco do ligamento periodontal apical.", "tratamento": "Endodontia ou exodontia, dependendo da possibilidade de restauração do remanescente dental.", "diferenciar": "Pulpite reversível: nesta a dor cessa ao remover o estímulo. Pólipo pulpar: forma crônica, geralmente indolor, com tecido de granulação visível.", "aparenciaCurta": "Dor espontânea/pulsatil; doi ao calor, alivia no frio", "causaCurta": "Cárie profunda / trauma não tratados", "tratamentoCurto": "Endodontia ou exodontia"}, {"id": "pulpite_hiperplasica", "nome": "Pulpite Crônica Hiperplásica (Pólipo Pulpar)", "categoria": "pulpar", "resumo": "Massa de tecido de granulação ('carne') saindo da câmara pulpar exposta.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,32.0 50.0,36.0 42.0,32.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#b9b3a2\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#b9b3a2\"/><circle cx=\"50\" cy=\"8\" r=\"9\" fill=\"#c65b6a\" stroke=\"#7c2f39\" stroke-width=\"1\"/></svg>", "clinico": "Massa de tecido de granulação avermelhado que cresce para fora da câmara pulpar, preenchendo o defeito coronário. Padrao único de inflamação pulpar crônica.", "localizacao": "Molares decíduos e permanentes jovens, com câmaras pulpares amplas e grande exposição pulpar.", "etiologia": "Irritação mecânica crônica + invasao bacteriana de baixa virulência sobre polpa exposta; rizogenese incompleta favorece a irrigação e mantem o dente vital.", "sintomas": "Geralmente assintomático; pode ser sensível a mastigação e sangrar facilmente.", "testes": "Vitalidade positiva; SEM continuidade com a gengiva adjacente.", "radiografico": "Grande destruição coronária com câmara pulpar amplamente exposta; ápice geralmente aberto (rizogenese incompleta).", "tratamento": "Endodontia (pulpectomia) ou exodontia conforme a viabilidade do remanescente.", "diferenciar": "Hiperplasia gengival sobre a cavidade: tem CONTINUIDADE com a gengiva. O pólipo pulpar NÃO tem continuidade e tem coloração mais escura.", "aparenciaCurta": "Massa avermelhada saindo do dente destruido", "causaCurta": "Exposição pulpar crônica em jovem (ápice aberto)", "tratamentoCurto": "Pulpectomia/endodontia ou exodontia"}, {"id": "necrose_pulpar", "nome": "Necrose Pulpar", "categoria": "pulpar", "resumo": "Morte do tecido pulpar; não responde a nenhum teste de vitalidade.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,32.0 50.0,36.0 42.0,32.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#3a3a3a\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#3a3a3a\"/></svg>", "clinico": "Destruição tecidual ampla que torna praticamente impossível identificar os componentes da polpa ao exame histopatológico.", "localizacao": "Toda a polpa (câmara e canal) do dente acometido.", "etiologia": "Evolução final de pulpite irreversível não tratada, trauma com ruptura vascular apical, ou infecção bacteriana avançada.", "sintomas": "Pode ser assintomática (as vezes so ha escurecimento do dente) ou preceder periodontite/abscesso apical.", "testes": "NÃO responde a testes térmicos nem elétricos de vitalidade.", "radiografico": "Pode não mostrar alteração inicialmente; com o tempo surgem sinais periapicais (alargamento do ligamento, radioluscência).", "tratamento": "Endodontia ou exodontia.", "diferenciar": "Calcificação/metamorfose cálcica: também altera o teste de vitalidade, mas SEM sintomas e com canal obliterado (não ha destruição tecidual).", "aparenciaCurta": "Sem resposta a nenhum teste de vitalidade", "causaCurta": "Pulpite irreversível não tratada / trauma", "tratamentoCurto": "Endodontia ou exodontia"}, {"id": "calcificacoes_pulpares", "nome": "Calcificações Pulpares (Dentículos / Cálculos)", "categoria": "pulpar", "resumo": "Estruturas calcificadas dentro da polpa; geralmente assintomáticas.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#b9b3a2\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#b9b3a2\"/><circle cx=\"50\" cy=\"22\" r=\"2.4\" fill=\"#f4efe0\"/><circle cx=\"49\" cy=\"55\" r=\"1.6\" fill=\"#f4efe0\"/></svg>", "clinico": "Incidência de 8 a 90%, aumenta com a idade; forte relação com pulpites crônicas de longa duração; pode ter tendência familiar. Dentículos formam-se durante a rizogenese; cálculos pulpares nas porções coronarias; calcificações lineares difusas não são visíveis ao raio-X.", "localizacao": "Dentículos: câmara e canais, proximos as furcas de multirradiculares. Cálculos pulpares: porção coronária da polpa.", "etiologia": "Processo degenerativo/reparador da polpa frente a irritação crônica de baixa intensidade; pode ocorrer sem causa aparente.", "sintomas": "Assintomática na grande maioria dos casos.", "testes": "Vitalidade geralmente positiva; pode diminuir se houver metamorfose cálcica extensa.", "radiografico": "Imagem radiopaca puntiforme/nodular na câmara ou canal; na metamorfose cálcica ha diminuição do espaco pulpar e coroa com coloração amarelada.", "tratamento": "Nenhum tratamento e necessário na maioria dos casos. Na metamorfose cálcica, endodontia so e indicada se houver evidência radiográfica de doença periapical.", "diferenciar": "Metamorfose cálcica pos-trauma: cursa com escurecimento amarelado da coroa e obliteração quase total do canal - calcificação comum não altera a cor do dente.", "aparenciaCurta": "Pontos radiopacos na polpa, assintomático", "causaCurta": "Irritação pulpar crônica / idade", "tratamentoCurto": "Nenhum (observação)"}, {"id": "periodontite_apical_aguda", "nome": "Periodontite Apical Aguda (Pericementite)", "categoria": "periapical_aguda", "resumo": "Dor a mastigação e percussão; PODE ocorrer em dente VITAL.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,24.0 50.0,28.0 42.0,24.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#3a3a3a\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#3a3a3a\"/><circle cx=\"50\" cy=\"96\" r=\"5.5\" fill=\"none\" stroke=\"#050a12\" stroke-width=\"3\"/></svg>", "clinico": "Dor pulsatil, não localizada e constante; dor a PERCUSSÃO e a OCLUSÃO. Características clínicas semelhantes as do abscesso periapical agudo - entra no diagnóstico diferencial obrigatório.", "localizacao": "Ligamento periodontal apical.", "etiologia": "Normalmente associada a dente desvitalizado, MAS PODE SER VITAL: trauma oclusal, ponto de contato prematuro em restauração recente, ou corpo estranho (instrumento endodôntico).", "sintomas": "Dor a mastigação e percussão, geralmente sem edema facial evidente.", "testes": "Vitalidade negativa ou positiva retardada (se dente vital, positiva); dor nitida a percussão vertical/horizontal.", "radiografico": "Geralmente nenhuma alteração, ou discreto aumento do espaco do ligamento periodontal apical.", "tratamento": "Dente não vital: endodontia ou exodontia. Dente vital: ajuste oclusal + anti-inflamatório + acompanhamento.", "diferenciar": "Abscesso periapical agudo: tem SUPURAÇÃO (pus) e tende a evoluir com edema; a periodontite apical aguda e so inflamação do ligamento, sem coleção purulenta.", "aparenciaCurta": "Dor a percussão/oclusão, pode ser dente vital", "causaCurta": "Trauma oclusal / dente desvitalizado", "tratamentoCurto": "Ajuste oclusal (vital) ou endo/exo (não vital)"}, {"id": "abscesso_periapical_agudo", "nome": "Abscesso Periapical Agudo", "categoria": "periapical_aguda", "resumo": "Pus no ápice; dor intensa, extrusão do dente, pode ter febre/calafrios.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,32.0 50.0,36.0 42.0,32.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#3a3a3a\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#3a3a3a\"/><polygon points=\"38.0,94.0 46.0,87.0 59.0,91.0 63.0,102.0 54.0,111.0 41.0,108.0 36.0,100.0\" fill=\"#050a12\" stroke=\"#c6462f\" stroke-width=\"1.4\"/><line x1=\"41.2\" y1=\"88.3\" x2=\"34\" y2=\"82\" stroke=\"#c6462f\" stroke-width=\"1.6\"/><line x1=\"58.8\" y1=\"88.3\" x2=\"66\" y2=\"82\" stroke=\"#c6462f\" stroke-width=\"1.6\"/><line x1=\"40.1\" y1=\"99.3\" x2=\"32\" y2=\"102\" stroke=\"#c6462f\" stroke-width=\"1.6\"/><line x1=\"59.9\" y1=\"99.3\" x2=\"68\" y2=\"102\" stroke=\"#c6462f\" stroke-width=\"1.6\"/></svg>", "clinico": "Dor intensa, inicialmente localizada podendo tornar-se difusa; sensibilidade EXTREMA a percussão; extrusão do dente; tumefação dos tecidos; pode haver cefaleia, mal-estar, febre e calafrios (toxemia).", "localizacao": "Ápice de um dente desvitalizado; pode ser inicial ou agudização de lesão crônica prévia (abscesso fênix).", "etiologia": "Sequência clássica: cárie/trauma -> pulpite -> necrose pulpar -> periodontite apical aguda -> abscesso periapical agudo.", "sintomas": "Dor pulsatil intensa, edema, extrusão dentária; sintomas sistêmicos em casos avançados.", "testes": "Vitalidade negativa; percussão extremamente dolorosa.", "radiografico": "Pode não haver alteração, mostrar so aumento do espaco do ligamento, ou imagem radiolúcida mal definida (agudização de processo crônico).", "tratamento": "Drenagem (trepanação ou incisional) + eliminação do foco + medicação (AINE e antibiótico se houver comprometimento sistêmico). Sinais/sintomas reduzem significativamente em 48h da drenagem. Desgaste oclusal se houver extrusão.", "diferenciar": "Abscesso periapical CRÔNICO: este e agudo, doloroso, com sinais sistêmicos; o crônico e silencioso, indolor e de longa duração.", "aparenciaCurta": "Dor intensa + extrusão + edema, pode ter febre", "causaCurta": "Necrose pulpar evoluida (sequência clássica)", "tratamentoCurto": "Drenagem + antibiótico/AINE se sistêmico"}, {"id": "granuloma_periapical", "nome": "Granuloma Periapical (Periodontite Apical Crônica)", "categoria": "periapical_cronica", "resumo": "75% das lesões periapicais; assintomático; radioluscência bem definida.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,24.0 50.0,28.0 42.0,24.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#3a3a3a\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#3a3a3a\"/><circle cx=\"50\" cy=\"99\" r=\"9\" fill=\"#050a12\" stroke=\"#8b94a3\" stroke-width=\"1.4\"/></svg>", "clinico": "Massa de tecido de granulação crônica (podendo agudizar) no ápice de dente desvitalizado; representa 75% das lesões inflamatórias periapicais. Normalmente ASSINTOMÁTICO, achado em radiografia de rotina.", "localizacao": "Ápice radicular de dente não vital.", "etiologia": "Resposta inflamatória crônica a microrganismos/produtos toxicos que persistem no canal radicular após a necrose pulpar.", "sintomas": "Assintomático; dor so se agudizar; mobilidade e percussão normais; tecido sobrejacente pode estar sensível.", "testes": "Vitalidade negativa (ou positiva se relacionada a apenas uma raiz de multirradicular).", "radiografico": "Imagem radiolúcida arredondada, BEM delimitada, unida ao ápice; ausência de lâmina dura apical; pode haver reabsorção radicular externa; de poucos mm a mais de 2cm.", "tratamento": "Endodontia (reduz carga microbiana) ou exodontia + curetagem apical. Se não cicatrizar: retratamento e, por fim, cirurgia paraendodontica.", "diferenciar": "Cisto radicular: a imagem radiográfica pode ser IDENTICA (a distinção definitiva e HISTOPATOLÓGICA - revestimento epitelial no cisto). Lesões maiores tendem a ser cisto.", "aparenciaCurta": "Radioluscência apical bem definida, assintomática", "causaCurta": "Necrose pulpar + inflamação crônica", "tratamentoCurto": "Endodontia (ou exo) + curetagem se preciso"}, {"id": "cisto_radicular", "nome": "Cisto Radicular (Periapical)", "categoria": "periapical_cronica", "resumo": "Cavidade cística revestida por epitélio; 7-54% das radioluscências periapicais.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,24.0 50.0,28.0 42.0,24.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#3a3a3a\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#3a3a3a\"/><circle cx=\"50\" cy=\"100\" r=\"13\" fill=\"#050a12\" stroke=\"#8b94a3\" stroke-width=\"1.2\"/><circle cx=\"50\" cy=\"100\" r=\"13\" fill=\"none\" stroke=\"#a89f84\" stroke-width=\"1\"/></svg>", "clinico": "Cavidade óssea patológica revestida por epitélio, preenchida por líquido/material semissolido, no ápice de dente desvitalizado. Assintomático exceto quando agudiza; tumefação/mobilidade/deslocamento dentário apenas em lesões grandes.", "localizacao": "Ápice de dente não vital; origem no epitélio residual de Malassez, epitélio sinusal ou revestimento de trajeto fistuloso.", "etiologia": "Proliferação epitelial estimulada por processo inflamatório crônico periapical de longa duração.", "sintomas": "Geralmente assintomático; vitalidade negativa.", "testes": "Vitalidade negativa.", "radiografico": "Imagem radiolúcida bem delimitada, com osteogenese reacional, ausência de lâmina dura, reabsorção radicular comum; pode atingir grande extensão (até um quadrante inteiro).", "tratamento": "Endodontia ou exodontia; cirurgia quando de grande extensão. Raramente pode haver transformação maligna do epitélio (carcinoma epidermoide).", "diferenciar": "Granuloma periapical: imagem radiográfica pode ser indistinguível - a confirmação e HISTOPATOLÓGICA (revestimento epitelial completo = cisto).", "aparenciaCurta": "Radioluscência apical bem definida, pode ser grande", "causaCurta": "Proliferação epitelial (restos de Malassez)", "tratamentoCurto": "Endodontia/exodontia +/- cirurgia"}, {"id": "cisto_radicular_lateral", "nome": "Cisto Radicular Lateral", "categoria": "periapical_cronica", "resumo": "Cisto radicular que surge na face LATERAL da raiz, via canal acessório.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,18.0 50.0,22.0 42.0,18.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#3a3a3a\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#3a3a3a\"/><circle cx=\"68\" cy=\"62\" r=\"9\" fill=\"#050a12\" stroke=\"#8b94a3\" stroke-width=\"1.3\"/></svg>", "clinico": "Variante do cisto radicular que se desenvolve na porção LATERAL da raiz, e não no ápice.", "localizacao": "Face lateral da raiz de dente não vital.", "etiologia": "Disseminação da inflamação através de um canal lateral (acessório) do dente.", "sintomas": "Geralmente assintomático.", "testes": "Vitalidade negativa.", "radiografico": "Imagem radiolúcida bem delimitada na LATERAL da raiz; ausência de lâmina dura.", "tratamento": "Endodontia ou exodontia.", "diferenciar": "Cisto periodontal lateral (origem NÃO inflamatória, dente vital): o cisto radicular lateral esta sempre ligado a um dente com necrose pulpar/canal lateral infectado.", "aparenciaCurta": "Radioluscência na lateral da raiz", "causaCurta": "Canal lateral infectado", "tratamentoCurto": "Endodontia ou exodontia"}, {"id": "cisto_residual", "nome": "Cisto Residual", "categoria": "periapical_cronica", "resumo": "Cisto radicular remanescente após exodontia (curetagem incompleta).", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><ellipse cx=\"50\" cy=\"38\" rx=\"38\" ry=\"8\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"14.0,38.0 86.0,38.0 82.0,100.0 18.0,100.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><circle cx=\"50\" cy=\"70\" r=\"15\" fill=\"#050a12\" stroke=\"#8b94a3\" stroke-width=\"1.4\"/></svg>", "clinico": "Cisto radicular que permanece no osso após a exodontia do dente que lhe deu origem, quando a curetagem foi incompleta.", "localizacao": "Processo alveolar EDÊNTULO (sem dente associado).", "etiologia": "Remoção do dente sem remoção completa do revestimento cístico periapical.", "sintomas": "Assintomático; geralmente achado radiográfico de rotina em área desdentada.", "testes": "Não se aplica (área edêntula, sem dente para testar).", "radiografico": "Imagem radiolúcida bem delimitada, circular ou oval, tamanho variável, localizada em rebordo alveolar edêntulo.", "tratamento": "Enucleação cirúrgica com curetagem.", "diferenciar": "So ocorre em área SEM dente. A história de exodontia prévia no local sugere fortemente cisto residual (descartar outras lesões de área edêntula).", "aparenciaCurta": "Radioluscência em área sem dente (pos-exodontia)", "causaCurta": "Curetagem incompleta após extração", "tratamentoCurto": "Enucleação cirúrgica"}, {"id": "abscesso_periapical_cronico", "nome": "Abscesso Periapical Crônico", "categoria": "periapical_cronica", "resumo": "Pus crônico e silencioso, contorno radiolúcido mal definido, +/- fístula.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,24.0 50.0,28.0 42.0,24.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#3a3a3a\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#3a3a3a\"/><polygon points=\"39.0,95.0 47.0,88.0 58.0,92.0 62.0,101.0 53.0,109.0 42.0,106.0 37.0,99.0\" fill=\"#050a12\" stroke=\"#8b94a3\" stroke-width=\"1.2\"/><polyline points=\"52.0,90.0 60.0,66.0 64.0,50.0\" fill=\"none\" stroke=\"#c6462f\" stroke-width=\"1.6\" stroke-dasharray=\"3,2\"/><circle cx=\"65\" cy=\"48\" r=\"2.4\" fill=\"#c6462f\"/></svg>", "clinico": "Acumulo de material purulento no alvéolo, de longa duração, causado por agente de baixa intensidade. SEM sintomatologia clínica - desenvolve-se de maneira silenciosa. Pode originar-se primariamente ou a partir de um episodio agudo prévio.", "localizacao": "Ápice de dente não vital; frequentemente associado a trajeto fistuloso (drenagem crônica).", "etiologia": "Infecção periapical crônica de baixa virulência, com drenagem continua através de fístula que impede o acumulo de pressao/dor.", "sintomas": "Assintomático; pode haver fístula intraoral ou cutanea associada (ponto de drenagem).", "testes": "Vitalidade negativa.", "radiografico": "Imagem radiolúcida SEM limites definidos e ausência de lâmina dura (contorno mal definido - diferente do contorno bem definido do granuloma/cisto).", "tratamento": "Endodontia ou exodontia + eliminação do foco; rastreamento da fístula com cone de guta-percha para confirmar o dente causador.", "diferenciar": "Granuloma/cisto: contorno BEM definido e sem fístula. Abscesso crônico: contorno MAL definido e comumente COM fístula ativa.", "aparenciaCurta": "Radioluscência mal definida, silenciosa, +/- fístula", "causaCurta": "Infecção periapical de baixa virulência", "tratamentoCurto": "Endodontia/exodontia + rastrear fístula"}, {"id": "celulite_facial", "nome": "Celulite Facial", "categoria": "disseminacao", "resumo": "Disseminação DIFUSA de infecção pelos planos faciais, sem coleção localizada.", "svg": "<svg viewBox=\"0 0 100 100\" class=\"dg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"100\" fill=\"#101418\"/><ellipse cx=\"50\" cy=\"50\" rx=\"30\" ry=\"36\" fill=\"#e7ded0\" stroke=\"#3a332b\" stroke-width=\"1.4\"/><ellipse cx=\"21\" cy=\"50\" rx=\"4\" ry=\"7\" fill=\"#e7ded0\" stroke=\"#3a332b\" stroke-width=\"1\"/><ellipse cx=\"79\" cy=\"50\" rx=\"4\" ry=\"7\" fill=\"#e7ded0\" stroke=\"#3a332b\" stroke-width=\"1\"/><circle cx=\"40\" cy=\"44\" r=\"2.6\" fill=\"#3a332b\"/><circle cx=\"60\" cy=\"44\" r=\"2.6\" fill=\"#3a332b\"/><line x1=\"50\" y1=\"46\" x2=\"50\" y2=\"56\" stroke=\"#3a332b\" stroke-width=\"1.2\"/><line x1=\"42\" y1=\"63\" x2=\"58\" y2=\"63\" stroke=\"#3a332b\" stroke-width=\"1.6\"/><polygon points=\"58.0,45.0 74.0,40.0 82.0,55.0 78.0,72.0 62.0,78.0 52.0,66.0\" fill=\"#c6462f\" opacity=\"0.55\"/></svg>", "clinico": "Disseminação AGUDA e edemaciada de um processo inflamatório, sem limites definidos - ocorre quando o abscesso não consegue drenar pela pele ou mucosa e se espalha pelos planos faciais dos tecidos moles.", "localizacao": "Tecidos moles da face/pescoco adjacentes ao dente causador (espaco bucal, submandibular, canino etc.), conforme a relação do ápice com as inserções musculares.", "etiologia": "Complicação de abscesso periapical agudo não drenado, com bacterias de alta virulência ou defesa comprometida (ex.: diabetes não controlada, imunossupressão).", "sintomas": "Tumefação facial difusa, dolorosa, quente, sem limite nitido; pode cursar com febre e mal-estar; risco de evoluir para trombose de seio cavernoso, mediastinite ou Angina de Ludwig.", "testes": "Dente causador com vitalidade negativa; avaliar se o edema e duro ou mole a palpação (define se ha coleção passível de drenagem).", "radiografico": "Depende do dente causador (sinais de necrose/lesão periapical); a celulite em si e achado de tecido mole, não ósseo.", "tratamento": "Drenagem do foco odontogênico (endodontia/exodontia) + antibioticoterapia sistemica + anti-inflamatório; atenção especial em diabeticos ou imunocomprometidos - reavaliação diária.", "diferenciar": "Abscesso periapical: coleção LOCALIZADA e passível de drenagem pontual. Celulite: disseminação DIFUSA pelos planos faciais, sem coleção bem localizada.", "aparenciaCurta": "Edema facial difuso, sem limite definido", "causaCurta": "Abscesso não drenado + defesa comprometida", "tratamentoCurto": "Drenagem do foco + antibiótico sistêmico"}, {"id": "trombose_seio_cavernoso", "nome": "Trombose do Seio Cavernoso", "categoria": "disseminacao", "resumo": "Emergência rara e grave: edema periorbitário bilateral + protrusão ocular.", "svg": "<svg viewBox=\"0 0 100 100\" class=\"dg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"100\" fill=\"#101418\"/><ellipse cx=\"50\" cy=\"50\" rx=\"30\" ry=\"36\" fill=\"#e7ded0\" stroke=\"#3a332b\" stroke-width=\"1.4\"/><ellipse cx=\"21\" cy=\"50\" rx=\"4\" ry=\"7\" fill=\"#e7ded0\" stroke=\"#3a332b\" stroke-width=\"1\"/><ellipse cx=\"79\" cy=\"50\" rx=\"4\" ry=\"7\" fill=\"#e7ded0\" stroke=\"#3a332b\" stroke-width=\"1\"/><circle cx=\"40\" cy=\"44\" r=\"2.6\" fill=\"#3a332b\"/><circle cx=\"60\" cy=\"44\" r=\"2.6\" fill=\"#3a332b\"/><line x1=\"50\" y1=\"46\" x2=\"50\" y2=\"56\" stroke=\"#3a332b\" stroke-width=\"1.2\"/><line x1=\"42\" y1=\"63\" x2=\"58\" y2=\"63\" stroke=\"#3a332b\" stroke-width=\"1.6\"/><ellipse cx=\"40\" cy=\"44\" rx=\"9\" ry=\"8\" fill=\"#c6462f\" opacity=\"0.5\"/><circle cx=\"40\" cy=\"44\" r=\"3.6\" fill=\"#1a1a1a\"/><line x1=\"40\" y1=\"44\" x2=\"30\" y2=\"40\" stroke=\"#c6462f\" stroke-width=\"1.6\"/><polygon points=\"28.0,39.0 31.0,37.0 31.0,41.0\" fill=\"#c6462f\"/><ellipse cx=\"60\" cy=\"44\" rx=\"9\" ry=\"8\" fill=\"#c6462f\" opacity=\"0.5\"/><circle cx=\"60\" cy=\"44\" r=\"3.6\" fill=\"#1a1a1a\"/><line x1=\"60\" y1=\"44\" x2=\"70\" y2=\"40\" stroke=\"#c6462f\" stroke-width=\"1.6\"/><polygon points=\"72.0,39.0 69.0,37.0 69.0,41.0\" fill=\"#c6462f\"/></svg>", "clinico": "Complicação rara (infecções bucodentarias respondem por ~10% dos casos) e grave: edema periorbitário com palpebras/conjuntiva envolvidas, protrusão e FIXAÇÃO do globo ocular, dilatação pupilar, dor ocular, perda de visao, podendo progredir para sinais de SNC (meningite, torpor, delírio).", "localizacao": "Seio cavernoso (seio dural entre as camadas da dura-máter), atingido por disseminação retrógrada a partir da face.", "etiologia": "Via anterior: infecção de dentes anteriores -> perfuração vestibular -> espaco canino -> veia facial/angular -> veia oftálmica inferior -> seio cavernoso. Via posterior: infecção de pre-molares/molares superiores.", "sintomas": "Edema periorbitário BILATERAL (caracteristico), febre, calafrios, cefaleia, taquicardia, náuseas/vomitos, rigidez de nuca em casos avançados.", "testes": "Emergência medica - diagnóstico clínico + exames de imagem (TC/RM) em ambiente hospitalar.", "radiografico": "Não avaliada por radiografia periapical; requer TC/RM em contexto hospitalar.", "tratamento": "Drenagem cirúrgica + antibióticos em ALTAS doses, internação hospitalar imediata. Mortalidade histórica de até 75%; hoje ainda próxima de 30%.", "diferenciar": "Celulite facial simples: edema unilateral, SEM protrusão/fixação do globo ocular e sem sinais de SNC. A trombose de seio cavernoso e bilateral e com sinais oculares/neurologicos graves.", "aparenciaCurta": "Edema periorbitário bilateral, olho fixo/protruso", "causaCurta": "Disseminação retrógrada via veia facial/oftálmica", "tratamentoCurto": "Emergência: drenagem + ATB em alta dose"}, {"id": "angina_ludwig", "nome": "Angina de Ludwig", "categoria": "disseminacao", "resumo": "Celulite bilateral do assoalho bucal com risco de obstrução de via aérea.", "svg": "<svg viewBox=\"0 0 100 100\" class=\"dg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"100\" fill=\"#101418\"/><ellipse cx=\"50\" cy=\"50\" rx=\"30\" ry=\"36\" fill=\"#e7ded0\" stroke=\"#3a332b\" stroke-width=\"1.4\"/><ellipse cx=\"21\" cy=\"50\" rx=\"4\" ry=\"7\" fill=\"#e7ded0\" stroke=\"#3a332b\" stroke-width=\"1\"/><ellipse cx=\"79\" cy=\"50\" rx=\"4\" ry=\"7\" fill=\"#e7ded0\" stroke=\"#3a332b\" stroke-width=\"1\"/><circle cx=\"40\" cy=\"44\" r=\"2.6\" fill=\"#3a332b\"/><circle cx=\"60\" cy=\"44\" r=\"2.6\" fill=\"#3a332b\"/><line x1=\"50\" y1=\"46\" x2=\"50\" y2=\"56\" stroke=\"#3a332b\" stroke-width=\"1.2\"/><line x1=\"42\" y1=\"63\" x2=\"58\" y2=\"63\" stroke=\"#3a332b\" stroke-width=\"1.6\"/><ellipse cx=\"42\" cy=\"78\" rx=\"13\" ry=\"10\" fill=\"#c6462f\" opacity=\"0.55\"/><ellipse cx=\"58\" cy=\"78\" rx=\"13\" ry=\"10\" fill=\"#c6462f\" opacity=\"0.55\"/><line x1=\"50\" y1=\"63\" x2=\"50\" y2=\"53\" stroke=\"#3f8f6a\" stroke-width=\"2.2\"/><polygon points=\"50.0,51.0 47.0,56.0 53.0,56.0\" fill=\"#3f8f6a\"/><polygon points=\"86.0,53.0 94.0,67.0 78.0,67.0\" fill=\"none\" stroke=\"#c6462f\" stroke-width=\"1.8\"/><line x1=\"86\" y1=\"58\" x2=\"86\" y2=\"62.5\" stroke=\"#c6462f\" stroke-width=\"1.6\"/><circle cx=\"86\" cy=\"64.5\" r=\"0.9\" fill=\"#c6462f\"/></svg>", "clinico": "Celulite AGRESSIVA e bilateral da região submandibular (70% de origem em terceiros molares inferiores), com elevação e protrusão da língua, tumefação volumosa do pescoco (até as clavículas) e risco iminente de OBSTRUÇÃO DAS VIAS AÉREAS.", "localizacao": "Espaços sublingual, submandibular e submentoniano bilateralmente; pode progredir para espaco faríngeo lateral, retrofaríngeo e mediastino.", "etiologia": "Infecção odontogênica grave (geralmente de molares inferiores) que se dissemina abaixo da inserção do musculo milo-hioideo.", "sintomas": "Dor cervical/assoalho bucal, restrição de movimento do pescoco, garganta dolorida, taquicardia, inquietação, necessidade de ficar ereto (sinal de obstrução iminente), febre e calafrios.", "testes": "Emergência - priorizar avaliação de via aérea antes de qualquer exame odontológico de rotina.", "radiografico": "Não e o foco diagnóstico inicial (emergência clínica); a imagem pode ajudar a localizar o dente/foco causador.", "tratamento": "1) Manutenção das vias aéreas (prioridade absoluta); 2) incisao e drenagem se houver flutuação; 3) antibioticoterapia em altas doses (penicilina de escolha); 4) eliminação do foco infeccioso original. Mortalidade histórica >50%; hoje ainda ha óbitos por mediastinite, pericardite e obstrução respiratória.", "diferenciar": "Celulite facial comum: não compromete via aérea. Angina de Ludwig: risco de vida IMEDIATO por obstrução de via aérea - sempre tratar como emergência.", "aparenciaCurta": "Tumefação bilateral do assoalho, língua elevada", "causaCurta": "Infecção de molar inferior abaixo do milo-hioideo", "tratamentoCurto": "Emergência: via aérea + drenagem + ATB"}, {"id": "osteomielite_aguda", "nome": "Osteomielite Supurativa Aguda", "categoria": "osteomielite", "resumo": "Inflamação aguda dos espaços medulares, menos de 1 mês, predomina em homens.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,32.0 50.0,36.0 42.0,32.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#3a3a3a\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#3a3a3a\"/><polygon points=\"37.0,93.0 46.0,85.0 60.0,90.0 64.0,102.0 54.0,112.0 40.0,108.0 34.0,99.0\" fill=\"#050a12\" stroke=\"#c6462f\" stroke-width=\"1.2\"/><polygon points=\"47.0,96.0 53.0,93.0 55.0,100.0 49.0,102.0\" fill=\"#faf6e9\"/></svg>", "clinico": "Processo inflamatório agudo nos espaços medulares do osso, com MENOS DE 1 MÊS de evolução (tempo insuficiente para o corpo reagir/encapsular). Forte predominância em homens (75%), mais comum na MANDÍBULA.", "localizacao": "Espaços medulares do osso maxilar/mandibular, a partir de um foco odontogênico.", "etiologia": "Infecção bacteriana odontogênica (dente com necrose/abscesso) associada a fatores predisponentes: doenças sistêmicas crônicas, imunocomprometimento, diminuição da vascularização óssea, higiene deficiente, tabagismo, diabetes.", "sintomas": "Febre, leucocitose, linfadenopatia, sensibilidade e tumefação dos tecidos moles; pode haver formação e esfoliação espontânea de sequestro ósseo.", "testes": "Biópsia incomum; hemograma com leucocitose.", "radiografico": "Pode não revelar alterações inicialmente, ou mostrar imagem radiolúcida mal definida.", "tratamento": "Antibiótico + drenagem + tratar a causa (extração/endodontia do dente causador). Antibióticos de escolha: penicilina, clindamicina, cefalexina.", "diferenciar": "Osteomielite CRÔNICA: sintomas agudos ha MENOS de 1 mês (aguda) x mais de 1 mês, mais branda e com fístula (crônica).", "aparenciaCurta": "Febre + leucocitose, evolução < 1 mês", "causaCurta": "Infecção odontogênica + fator predisponente", "tratamentoCurto": "Antibiótico + drenagem + tratar a causa"}, {"id": "osteomielite_cronica", "nome": "Osteomielite Supurativa Crônica", "categoria": "osteomielite", "resumo": "Evolução >1 mês; fístula, sequestro, cirurgia obrigatória.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,32.0 50.0,36.0 42.0,32.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#3a3a3a\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#3a3a3a\"/><polygon points=\"34.0,92.0 48.0,82.0 64.0,88.0 69.0,104.0 54.0,116.0 37.0,111.0 30.0,99.0\" fill=\"#050a12\" stroke=\"#8b94a3\" stroke-width=\"1.2\"/><polygon points=\"46.0,95.0 53.0,91.0 57.0,99.0 49.0,104.0\" fill=\"#faf6e9\"/><polyline points=\"36.0,104.0 30.0,114.0 28.0,123.0\" fill=\"none\" stroke=\"#8b94a3\" stroke-width=\"1.4\" stroke-dasharray=\"3,2\"/><circle cx=\"27\" cy=\"125\" r=\"2.2\" fill=\"#8b94a3\"/></svg>", "clinico": "Evolução da forma aguda (a partir de ~1 mês) ou ja inicia crônica. Quadro mais brando: tumefação, dor, formação de FÍSTULA, sequestro ósseo, perda dentária e até fratura patológica. Periodos de agudização intercalados com melhora.", "localizacao": "Espaços medulares e corticais do osso mandibular (mais comum); predominância em homens (75%).", "etiologia": "Persistência de infecção odontogênica com formação de tecido de granulação denso (cápsula fibrosa) que dificulta o acesso de antibióticos e a resposta imune.", "sintomas": "Dor e tumefação mais brandas que a forma aguda; fístula de drenagem; pode haver perda de dentes e fratura patológica do osso enfraquecido.", "testes": "Biópsia do tecido mole/ósseo em casos persistentes.", "radiografico": "Imagem radiolúcida mal definida, disforme e irregular, com SEQUESTROS ÓSSEOS radiopacos centrais; pode haver espessamento da cortical ao redor.", "tratamento": "Difícil resposta a antibióticos isolados (cápsula fibrosa protege a área); INTERVENÇÃO CIRÚRGICA OBRIGATÓRIA (remover todo tecido infectado até osso sadio sangrante) + antibióticos intravenosos em altas doses; casos persistentes podem exigir ressecção e reconstrução.", "diferenciar": "Osteíte condensante: forma osso DENSO (radiopaco) reacional sem destruição/sequestro; a osteomielite crônica DESTROI o osso (radiolúcida, com sequestro).", "aparenciaCurta": "Fístula + sequestro ósseo, evolução > 1 mês", "causaCurta": "Infecção odontogênica persistente (cápsula fibrosa)", "tratamentoCurto": "Cirurgia obrigatória + ATB IV em alta dose"}, {"id": "osteite_condensante", "nome": "Osteíte Condensante", "categoria": "osteomielite", "resumo": "Radiopacidade reacional indolor no ápice, achado casual em jovens.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,24.0 50.0,28.0 42.0,24.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#3a3a3a\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#3a3a3a\"/><circle cx=\"60\" cy=\"92\" r=\"9\" fill=\"#faf6e9\"/><circle cx=\"50\" cy=\"98\" r=\"4.5\" fill=\"#050a12\" stroke=\"#8b94a3\" stroke-width=\"1\"/></svg>", "clinico": "Também chamada osteomielite esclerosante crônica focal. Área de esclerose óssea REACIONAL, indolor, associada ao ápice de dente com pulpite ou necrose (cárie extensa/restauração profunda). Achado incidental em radiografia de rotina.", "localizacao": "Mais frequente na região de pre-molares e molares INFERIORES, em crianças e adultos jovens.", "etiologia": "Resposta óssea reparadora a estímulo inflamatório crônico de baixa intensidade vindo da polpa (não e infecção óssea ativa como a osteomielite).", "sintomas": "Indolor; achado casual em exame radiográfico.", "testes": "Vitalidade do dente associado geralmente alterada (pulpite/necrose).", "radiografico": "Área RADIOPACA (densa), SEM contorno radiolúcido, contorno geralmente uniforme, adjacente ao ápice de dente com lesão inflamatória apical; SEM expansão óssea.", "tratamento": "Resolver o foco de infecção odontogênica (endodontia ou exodontia). Regride em ~85% dos casos; em 15% permanece cicatriz óssea radiopaca residual.", "diferenciar": "Osteomielite com periostite proliferativa (Garré): forma camadas paralelas ('casca de cebola') EXPANDINDO a superficie óssea; a osteíte condensante NÃO expande o osso e fica confinada ao redor do ápice.", "aparenciaCurta": "Radiopacidade uniforme no ápice, indolor", "causaCurta": "Estímulo inflamatório crônico de baixa intensidade", "tratamentoCurto": "Tratar o dente causador (endo/exo)"}, {"id": "osteomielite_garre", "nome": "Osteomielite com Periostite Proliferativa (Garré)", "categoria": "osteomielite", "resumo": "Camadas ósseas paralelas ('casca de cebola'), expande a cortical, jovens.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,24.0 50.0,28.0 42.0,24.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#3a3a3a\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#3a3a3a\"/><circle cx=\"70\" cy=\"90\" r=\"16\" fill=\"none\" stroke=\"#faf6e9\" stroke-width=\"1.3\" opacity=\"0.9\"/><circle cx=\"70\" cy=\"90\" r=\"20\" fill=\"none\" stroke=\"#faf6e9\" stroke-width=\"1.3\" opacity=\"0.78\"/><circle cx=\"70\" cy=\"90\" r=\"24\" fill=\"none\" stroke=\"#faf6e9\" stroke-width=\"1.3\" opacity=\"0.66\"/><circle cx=\"70\" cy=\"90\" r=\"28\" fill=\"none\" stroke=\"#faf6e9\" stroke-width=\"1.3\" opacity=\"0.54\"/></svg>", "clinico": "Reação periosteal a inflamação: o periósteo forma várias camadas paralelas de osso vital reacional ('casca de cebola'), EXPANDINDO a superficie óssea. Idade média: 13 anos; sem predileção por sexo; maioria unifocal.", "localizacao": "Mais comum em pre-molares e molares inferiores; localização preferencial na margem inferior da mandíbula, podendo acometer a cortical vestibular.", "etiologia": "Causa mais frequente: cárie e doença periodontal associada; também relacionada a fraturas, cistos e infecções odontogenicas secundarias, em paciente jovem com periósteo muito reativo.", "sintomas": "Aumento de volume facial assimetrico e progressivo, geralmente pouco doloroso.", "testes": "Biópsia raramente necessária (so se o diagnóstico clínico/radiográfico for questionado).", "radiografico": "Laminações ósseas radiopacas PARALELAS entre si e a cortical subjacente ('casca de cebola'); tomografia computadorizada e o exame mais indicado. Pode haver sequestros ósseos no osso neoformado.", "tratamento": "Eliminação da fonte de infecção (dente causador); as camadas ósseas se consolidam/remodelam entre 6 e 12 meses. Biópsia reservada para diagnóstico diferencial com lesões neoplásicas quando não ha relação clara com foco infeccioso.", "diferenciar": "Osteíte condensante: radiopacidade compacta e confinada ao ápice, SEM expansão nem laminação. Garré tem expansão em camadas paralelas na cortical.", "aparenciaCurta": "Camadas radiopacas paralelas ('casca de cebola')", "causaCurta": "Cárie/infecção odontogênica em jovem", "tratamentoCurto": "Eliminar o foco; remodela em 6-12 meses"}, {"id": "osteite_alveolar", "nome": "Osteíte Alveolar (Alvéolo Seco)", "categoria": "osteomielite", "resumo": "Perda do coágulo pos-exodontia; dor forte com odor fétido em 3-4 dias.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"14.0,36.0 34.0,36.0 31.0,90.0 17.0,90.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"12.0,14.0 36.0,14.0 34.0,36.0 14.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"66.0,36.0 86.0,36.0 83.0,90.0 69.0,90.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"64.0,14.0 88.0,14.0 86.0,36.0 66.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"36.0,30.0 64.0,30.0 66.0,95.0 34.0,95.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"42.0,34.0 58.0,34.0 55.0,45.0 60.0,55.0 54.0,66.0 58.0,78.0 50.0,88.0 42.0,78.0 46.0,66.0 40.0,55.0 45.0,45.0\" fill=\"#050a12\" stroke=\"#c6462f\" stroke-width=\"1.3\"/><circle cx=\"46\" cy=\"48\" r=\"1.3\" fill=\"#faf6e9\"/><circle cx=\"52\" cy=\"60\" r=\"1.3\" fill=\"#faf6e9\"/><circle cx=\"47\" cy=\"72\" r=\"1.3\" fill=\"#faf6e9\"/></svg>", "clinico": "Também chamada alveolite. Perda/destruição precoce do coágulo sanguineo após exodontia, impedindo a cicatrização normal do alvéolo. Dor ACENTUADA que surge 3 a 4 dias após a extração, com odor fétido; osso exposto muito sensível a sondagem.", "localizacao": "Mais frequente na região POSTERIOR da mandíbula, principalmente após extração de terceiros molares inferiores (20-25% dessas extrações).", "etiologia": "Terceiros molares profundamente impactados, higiene bucal inadequada, cirurgiões inexperientes, extrações traumáticas, uso de contraceptivos orais, tabagismo (20% em fumantes de 1 maco/dia, até 40% se fumar nas 24h pos-cirurgia), irrigação inadequada, sucção/cuspir excessivo, infecção pre-operatória (pericoronarite).", "sintomas": "Dor intensa que pode irradiar para ouvido, região temporal ou olho; odor fétido; trismo; tumefação/linfadenopatia (menos comuns); sinais e sintomas duram de 10 a 40 dias sem tratamento.", "testes": "Sondagem do alvéolo revela osso exposto e sensível, sem coágulo.", "radiografico": "Solicitada para descartar fragmento dentário ou corpo estranho retido no alvéolo.", "tratamento": "NÃO curetar o alvéolo (aumenta a dor); irrigação com solução salina, remoção de suturas se necessário, curativo alveolar sedativo, analgésicos potentes, orientação de higiene local.", "diferenciar": "Osteomielite: a osteíte alveolar fica restrita ao alvéolo pos-extração (sem destruição óssea profunda/sequestro), enquanto a osteomielite envolve infecção óssea verdadeira com possível sequestro.", "aparenciaCurta": "Alvéolo vazio, osso exposto, odor fétido", "causaCurta": "Perda do coágulo pos-exodontia (tabagismo, trauma)", "tratamentoCurto": "Irrigação + curativo sedativo (NÃO curetar)"}], "quiz": [{"id": "qi01", "kind": "image", "prompt": "Com base no esquema (tipo radiografia anotada), qual o diagnóstico mais provável?", "options": ["Necrose Pulpar", "Pulpite Reversível", "Pulpite Irreversível", "Periodontite Apical Aguda (Pericementite)"], "correct": "Pulpite Reversível", "explain": "Pulpite irreversível: na reversível a dor SOME ao retirar o estímulo; na irreversível a dor CONTINUA mesmo sem o estímulo.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg qimg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,18.0 50.0,22.0 42.0,18.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#e0935f\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#e0935f\"/></svg>", "categoria": "pulpar"}, {"id": "qi02", "kind": "image", "prompt": "Com base no esquema (tipo radiografia anotada), qual o diagnóstico mais provável?", "options": ["Pulpite Reversível", "Pulpite Irreversível", "Osteíte Condensante", "Pulpite Crônica Hiperplásica (Pólipo Pulpar)"], "correct": "Pulpite Irreversível", "explain": "Pulpite reversível: nesta a dor cessa ao remover o estímulo. Pólipo pulpar: forma crônica, geralmente indolor, com tecido de granulação visível.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg qimg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,32.0 50.0,36.0 42.0,32.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#d94a2b\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#d94a2b\"/></svg>", "categoria": "pulpar"}, {"id": "qi03", "kind": "image", "prompt": "Com base no esquema (tipo radiografia anotada), qual o diagnóstico mais provável?", "options": ["Necrose Pulpar", "Granuloma Periapical (Periodontite Apical Crônica)", "Pulpite Crônica Hiperplásica (Pólipo Pulpar)", "Pulpite Irreversível"], "correct": "Pulpite Crônica Hiperplásica (Pólipo Pulpar)", "explain": "Hiperplasia gengival sobre a cavidade: tem CONTINUIDADE com a gengiva. O pólipo pulpar NÃO tem continuidade e tem coloração mais escura.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg qimg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,32.0 50.0,36.0 42.0,32.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#b9b3a2\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#b9b3a2\"/><circle cx=\"50\" cy=\"8\" r=\"9\" fill=\"#c65b6a\" stroke=\"#7c2f39\" stroke-width=\"1\"/></svg>", "categoria": "pulpar"}, {"id": "qi04", "kind": "image", "prompt": "Com base no esquema (tipo radiografia anotada), qual o diagnóstico mais provável?", "options": ["Calcificações Pulpares (Dentículos / Cálculos)", "Pulpite Irreversível", "Pulpite Reversível", "Necrose Pulpar"], "correct": "Necrose Pulpar", "explain": "Calcificação/metamorfose cálcica: também altera o teste de vitalidade, mas SEM sintomas e com canal obliterado (não ha destruição tecidual).", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg qimg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,32.0 50.0,36.0 42.0,32.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#3a3a3a\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#3a3a3a\"/></svg>", "categoria": "pulpar"}, {"id": "qi05", "kind": "image", "prompt": "Com base no esquema (tipo radiografia anotada), qual o diagnóstico mais provável?", "options": ["Pulpite Irreversível", "Osteíte Condensante", "Calcificações Pulpares (Dentículos / Cálculos)", "Necrose Pulpar"], "correct": "Calcificações Pulpares (Dentículos / Cálculos)", "explain": "Metamorfose cálcica pos-trauma: cursa com escurecimento amarelado da coroa e obliteração quase total do canal - calcificação comum não altera a cor do dente.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg qimg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#b9b3a2\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#b9b3a2\"/><circle cx=\"50\" cy=\"22\" r=\"2.4\" fill=\"#f4efe0\"/><circle cx=\"49\" cy=\"55\" r=\"1.6\" fill=\"#f4efe0\"/></svg>", "categoria": "pulpar"}, {"id": "qi06", "kind": "image", "prompt": "Com base no esquema (tipo radiografia anotada), qual o diagnóstico mais provável?", "options": ["Periodontite Apical Aguda (Pericementite)", "Granuloma Periapical (Periodontite Apical Crônica)", "Pulpite Irreversível", "Abscesso Periapical Agudo"], "correct": "Periodontite Apical Aguda (Pericementite)", "explain": "Abscesso periapical agudo: tem SUPURAÇÃO (pus) e tende a evoluir com edema; a periodontite apical aguda e so inflamação do ligamento, sem coleção purulenta.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg qimg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,24.0 50.0,28.0 42.0,24.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#3a3a3a\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#3a3a3a\"/><circle cx=\"50\" cy=\"96\" r=\"5.5\" fill=\"none\" stroke=\"#050a12\" stroke-width=\"3\"/></svg>", "categoria": "periapical_aguda"}, {"id": "qi07", "kind": "image", "prompt": "Com base no esquema (tipo radiografia anotada), qual o diagnóstico mais provável?", "options": ["Celulite Facial", "Periodontite Apical Aguda (Pericementite)", "Abscesso Periapical Crônico", "Abscesso Periapical Agudo"], "correct": "Abscesso Periapical Agudo", "explain": "Abscesso periapical CRÔNICO: este e agudo, doloroso, com sinais sistêmicos; o crônico e silencioso, indolor e de longa duração.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg qimg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,32.0 50.0,36.0 42.0,32.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#3a3a3a\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#3a3a3a\"/><polygon points=\"38.0,94.0 46.0,87.0 59.0,91.0 63.0,102.0 54.0,111.0 41.0,108.0 36.0,100.0\" fill=\"#050a12\" stroke=\"#c6462f\" stroke-width=\"1.4\"/><line x1=\"41.2\" y1=\"88.3\" x2=\"34\" y2=\"82\" stroke=\"#c6462f\" stroke-width=\"1.6\"/><line x1=\"58.8\" y1=\"88.3\" x2=\"66\" y2=\"82\" stroke=\"#c6462f\" stroke-width=\"1.6\"/><line x1=\"40.1\" y1=\"99.3\" x2=\"32\" y2=\"102\" stroke=\"#c6462f\" stroke-width=\"1.6\"/><line x1=\"59.9\" y1=\"99.3\" x2=\"68\" y2=\"102\" stroke=\"#c6462f\" stroke-width=\"1.6\"/></svg>", "categoria": "periapical_aguda"}, {"id": "qi08", "kind": "image", "prompt": "Com base no esquema (tipo radiografia anotada), qual o diagnóstico mais provável?", "options": ["Osteíte Condensante", "Granuloma Periapical (Periodontite Apical Crônica)", "Cisto Radicular (Periapical)", "Abscesso Periapical Crônico"], "correct": "Granuloma Periapical (Periodontite Apical Crônica)", "explain": "Cisto radicular: a imagem radiográfica pode ser IDENTICA (a distinção definitiva e HISTOPATOLÓGICA - revestimento epitelial no cisto). Lesões maiores tendem a ser cisto.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg qimg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,24.0 50.0,28.0 42.0,24.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#3a3a3a\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#3a3a3a\"/><circle cx=\"50\" cy=\"99\" r=\"9\" fill=\"#050a12\" stroke=\"#8b94a3\" stroke-width=\"1.4\"/></svg>", "categoria": "periapical_cronica"}, {"id": "qi09", "kind": "image", "prompt": "Com base no esquema (tipo radiografia anotada), qual o diagnóstico mais provável?", "options": ["Granuloma Periapical (Periodontite Apical Crônica)", "Cisto Residual", "Abscesso Periapical Crônico", "Cisto Radicular (Periapical)"], "correct": "Cisto Radicular (Periapical)", "explain": "Granuloma periapical: imagem radiográfica pode ser indistinguível - a confirmação e HISTOPATOLÓGICA (revestimento epitelial completo = cisto).", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg qimg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,24.0 50.0,28.0 42.0,24.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#3a3a3a\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#3a3a3a\"/><circle cx=\"50\" cy=\"100\" r=\"13\" fill=\"#050a12\" stroke=\"#8b94a3\" stroke-width=\"1.2\"/><circle cx=\"50\" cy=\"100\" r=\"13\" fill=\"none\" stroke=\"#a89f84\" stroke-width=\"1\"/></svg>", "categoria": "periapical_cronica"}, {"id": "qi10", "kind": "image", "prompt": "Com base no esquema (tipo radiografia anotada), qual o diagnóstico mais provável?", "options": ["Cisto Residual", "Periodontite Apical Aguda (Pericementite)", "Cisto Radicular (Periapical)", "Cisto Radicular Lateral"], "correct": "Cisto Radicular Lateral", "explain": "Cisto periodontal lateral (origem NÃO inflamatória, dente vital): o cisto radicular lateral esta sempre ligado a um dente com necrose pulpar/canal lateral infectado.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg qimg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,18.0 50.0,22.0 42.0,18.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#3a3a3a\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#3a3a3a\"/><circle cx=\"68\" cy=\"62\" r=\"9\" fill=\"#050a12\" stroke=\"#8b94a3\" stroke-width=\"1.3\"/></svg>", "categoria": "periapical_cronica"}, {"id": "qi11", "kind": "image", "prompt": "Com base no esquema (tipo radiografia anotada), qual o diagnóstico mais provável?", "options": ["Cisto Radicular (Periapical)", "Granuloma Periapical (Periodontite Apical Crônica)", "Cisto Residual", "Cisto Radicular Lateral"], "correct": "Cisto Residual", "explain": "So ocorre em área SEM dente. A história de exodontia prévia no local sugere fortemente cisto residual (descartar outras lesões de área edêntula).", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg qimg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><ellipse cx=\"50\" cy=\"38\" rx=\"38\" ry=\"8\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"14.0,38.0 86.0,38.0 82.0,100.0 18.0,100.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><circle cx=\"50\" cy=\"70\" r=\"15\" fill=\"#050a12\" stroke=\"#8b94a3\" stroke-width=\"1.4\"/></svg>", "categoria": "periapical_cronica"}, {"id": "qi12", "kind": "image", "prompt": "Com base no esquema (tipo radiografia anotada), qual o diagnóstico mais provável?", "options": ["Abscesso Periapical Agudo", "Granuloma Periapical (Periodontite Apical Crônica)", "Abscesso Periapical Crônico", "Cisto Radicular (Periapical)"], "correct": "Abscesso Periapical Crônico", "explain": "Granuloma/cisto: contorno BEM definido e sem fístula. Abscesso crônico: contorno MAL definido e comumente COM fístula ativa.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg qimg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,24.0 50.0,28.0 42.0,24.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#3a3a3a\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#3a3a3a\"/><polygon points=\"39.0,95.0 47.0,88.0 58.0,92.0 62.0,101.0 53.0,109.0 42.0,106.0 37.0,99.0\" fill=\"#050a12\" stroke=\"#8b94a3\" stroke-width=\"1.2\"/><polyline points=\"52.0,90.0 60.0,66.0 64.0,50.0\" fill=\"none\" stroke=\"#c6462f\" stroke-width=\"1.6\" stroke-dasharray=\"3,2\"/><circle cx=\"65\" cy=\"48\" r=\"2.4\" fill=\"#c6462f\"/></svg>", "categoria": "periapical_cronica"}, {"id": "qi13", "kind": "image", "prompt": "Com base no esquema (tipo radiografia anotada), qual o diagnóstico mais provável?", "options": ["Abscesso Periapical Agudo", "Celulite Facial", "Angina de Ludwig", "Trombose do Seio Cavernoso"], "correct": "Celulite Facial", "explain": "Abscesso periapical: coleção LOCALIZADA e passível de drenagem pontual. Celulite: disseminação DIFUSA pelos planos faciais, sem coleção bem localizada.", "svg": "<svg viewBox=\"0 0 100 100\" class=\"dg qimg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"100\" fill=\"#101418\"/><ellipse cx=\"50\" cy=\"50\" rx=\"30\" ry=\"36\" fill=\"#e7ded0\" stroke=\"#3a332b\" stroke-width=\"1.4\"/><ellipse cx=\"21\" cy=\"50\" rx=\"4\" ry=\"7\" fill=\"#e7ded0\" stroke=\"#3a332b\" stroke-width=\"1\"/><ellipse cx=\"79\" cy=\"50\" rx=\"4\" ry=\"7\" fill=\"#e7ded0\" stroke=\"#3a332b\" stroke-width=\"1\"/><circle cx=\"40\" cy=\"44\" r=\"2.6\" fill=\"#3a332b\"/><circle cx=\"60\" cy=\"44\" r=\"2.6\" fill=\"#3a332b\"/><line x1=\"50\" y1=\"46\" x2=\"50\" y2=\"56\" stroke=\"#3a332b\" stroke-width=\"1.2\"/><line x1=\"42\" y1=\"63\" x2=\"58\" y2=\"63\" stroke=\"#3a332b\" stroke-width=\"1.6\"/><polygon points=\"58.0,45.0 74.0,40.0 82.0,55.0 78.0,72.0 62.0,78.0 52.0,66.0\" fill=\"#c6462f\" opacity=\"0.55\"/></svg>", "categoria": "disseminacao"}, {"id": "qi14", "kind": "image", "prompt": "Com base no esquema (tipo radiografia anotada), qual o diagnóstico mais provável?", "options": ["Trombose do Seio Cavernoso", "Osteomielite Supurativa Aguda", "Angina de Ludwig", "Celulite Facial"], "correct": "Trombose do Seio Cavernoso", "explain": "Celulite facial simples: edema unilateral, SEM protrusão/fixação do globo ocular e sem sinais de SNC. A trombose de seio cavernoso e bilateral e com sinais oculares/neurologicos graves.", "svg": "<svg viewBox=\"0 0 100 100\" class=\"dg qimg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"100\" fill=\"#101418\"/><ellipse cx=\"50\" cy=\"50\" rx=\"30\" ry=\"36\" fill=\"#e7ded0\" stroke=\"#3a332b\" stroke-width=\"1.4\"/><ellipse cx=\"21\" cy=\"50\" rx=\"4\" ry=\"7\" fill=\"#e7ded0\" stroke=\"#3a332b\" stroke-width=\"1\"/><ellipse cx=\"79\" cy=\"50\" rx=\"4\" ry=\"7\" fill=\"#e7ded0\" stroke=\"#3a332b\" stroke-width=\"1\"/><circle cx=\"40\" cy=\"44\" r=\"2.6\" fill=\"#3a332b\"/><circle cx=\"60\" cy=\"44\" r=\"2.6\" fill=\"#3a332b\"/><line x1=\"50\" y1=\"46\" x2=\"50\" y2=\"56\" stroke=\"#3a332b\" stroke-width=\"1.2\"/><line x1=\"42\" y1=\"63\" x2=\"58\" y2=\"63\" stroke=\"#3a332b\" stroke-width=\"1.6\"/><ellipse cx=\"40\" cy=\"44\" rx=\"9\" ry=\"8\" fill=\"#c6462f\" opacity=\"0.5\"/><circle cx=\"40\" cy=\"44\" r=\"3.6\" fill=\"#1a1a1a\"/><line x1=\"40\" y1=\"44\" x2=\"30\" y2=\"40\" stroke=\"#c6462f\" stroke-width=\"1.6\"/><polygon points=\"28.0,39.0 31.0,37.0 31.0,41.0\" fill=\"#c6462f\"/><ellipse cx=\"60\" cy=\"44\" rx=\"9\" ry=\"8\" fill=\"#c6462f\" opacity=\"0.5\"/><circle cx=\"60\" cy=\"44\" r=\"3.6\" fill=\"#1a1a1a\"/><line x1=\"60\" y1=\"44\" x2=\"70\" y2=\"40\" stroke=\"#c6462f\" stroke-width=\"1.6\"/><polygon points=\"72.0,39.0 69.0,37.0 69.0,41.0\" fill=\"#c6462f\"/></svg>", "categoria": "disseminacao"}, {"id": "qi15", "kind": "image", "prompt": "Com base no esquema (tipo radiografia anotada), qual o diagnóstico mais provável?", "options": ["Celulite Facial", "Angina de Ludwig", "Osteomielite Supurativa Crônica", "Trombose do Seio Cavernoso"], "correct": "Angina de Ludwig", "explain": "Celulite facial comum: não compromete via aérea. Angina de Ludwig: risco de vida IMEDIATO por obstrução de via aérea - sempre tratar como emergência.", "svg": "<svg viewBox=\"0 0 100 100\" class=\"dg qimg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"100\" fill=\"#101418\"/><ellipse cx=\"50\" cy=\"50\" rx=\"30\" ry=\"36\" fill=\"#e7ded0\" stroke=\"#3a332b\" stroke-width=\"1.4\"/><ellipse cx=\"21\" cy=\"50\" rx=\"4\" ry=\"7\" fill=\"#e7ded0\" stroke=\"#3a332b\" stroke-width=\"1\"/><ellipse cx=\"79\" cy=\"50\" rx=\"4\" ry=\"7\" fill=\"#e7ded0\" stroke=\"#3a332b\" stroke-width=\"1\"/><circle cx=\"40\" cy=\"44\" r=\"2.6\" fill=\"#3a332b\"/><circle cx=\"60\" cy=\"44\" r=\"2.6\" fill=\"#3a332b\"/><line x1=\"50\" y1=\"46\" x2=\"50\" y2=\"56\" stroke=\"#3a332b\" stroke-width=\"1.2\"/><line x1=\"42\" y1=\"63\" x2=\"58\" y2=\"63\" stroke=\"#3a332b\" stroke-width=\"1.6\"/><ellipse cx=\"42\" cy=\"78\" rx=\"13\" ry=\"10\" fill=\"#c6462f\" opacity=\"0.55\"/><ellipse cx=\"58\" cy=\"78\" rx=\"13\" ry=\"10\" fill=\"#c6462f\" opacity=\"0.55\"/><line x1=\"50\" y1=\"63\" x2=\"50\" y2=\"53\" stroke=\"#3f8f6a\" stroke-width=\"2.2\"/><polygon points=\"50.0,51.0 47.0,56.0 53.0,56.0\" fill=\"#3f8f6a\"/><polygon points=\"86.0,53.0 94.0,67.0 78.0,67.0\" fill=\"none\" stroke=\"#c6462f\" stroke-width=\"1.8\"/><line x1=\"86\" y1=\"58\" x2=\"86\" y2=\"62.5\" stroke=\"#c6462f\" stroke-width=\"1.6\"/><circle cx=\"86\" cy=\"64.5\" r=\"0.9\" fill=\"#c6462f\"/></svg>", "categoria": "disseminacao"}, {"id": "qi16", "kind": "image", "prompt": "Com base no esquema (tipo radiografia anotada), qual o diagnóstico mais provável?", "options": ["Osteíte Condensante", "Osteomielite Supurativa Aguda", "Osteomielite Supurativa Crônica", "Osteíte Alveolar (Alvéolo Seco)"], "correct": "Osteomielite Supurativa Aguda", "explain": "Osteomielite CRÔNICA: sintomas agudos ha MENOS de 1 mês (aguda) x mais de 1 mês, mais branda e com fístula (crônica).", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg qimg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,32.0 50.0,36.0 42.0,32.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#3a3a3a\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#3a3a3a\"/><polygon points=\"37.0,93.0 46.0,85.0 60.0,90.0 64.0,102.0 54.0,112.0 40.0,108.0 34.0,99.0\" fill=\"#050a12\" stroke=\"#c6462f\" stroke-width=\"1.2\"/><polygon points=\"47.0,96.0 53.0,93.0 55.0,100.0 49.0,102.0\" fill=\"#faf6e9\"/></svg>", "categoria": "osteomielite"}, {"id": "qi17", "kind": "image", "prompt": "Com base no esquema (tipo radiografia anotada), qual o diagnóstico mais provável?", "options": ["Osteíte Condensante", "Osteomielite Supurativa Crônica", "Osteomielite Supurativa Aguda", "Osteomielite com Periostite Proliferativa (Garré)"], "correct": "Osteomielite Supurativa Crônica", "explain": "Osteíte condensante: forma osso DENSO (radiopaco) reacional sem destruição/sequestro; a osteomielite crônica DESTROI o osso (radiolúcida, com sequestro).", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg qimg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,32.0 50.0,36.0 42.0,32.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#3a3a3a\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#3a3a3a\"/><polygon points=\"34.0,92.0 48.0,82.0 64.0,88.0 69.0,104.0 54.0,116.0 37.0,111.0 30.0,99.0\" fill=\"#050a12\" stroke=\"#8b94a3\" stroke-width=\"1.2\"/><polygon points=\"46.0,95.0 53.0,91.0 57.0,99.0 49.0,104.0\" fill=\"#faf6e9\"/><polyline points=\"36.0,104.0 30.0,114.0 28.0,123.0\" fill=\"none\" stroke=\"#8b94a3\" stroke-width=\"1.4\" stroke-dasharray=\"3,2\"/><circle cx=\"27\" cy=\"125\" r=\"2.2\" fill=\"#8b94a3\"/></svg>", "categoria": "osteomielite"}, {"id": "qi18", "kind": "image", "prompt": "Com base no esquema (tipo radiografia anotada), qual o diagnóstico mais provável?", "options": ["Osteíte Condensante", "Osteomielite Supurativa Crônica", "Granuloma Periapical (Periodontite Apical Crônica)", "Osteomielite com Periostite Proliferativa (Garré)"], "correct": "Osteíte Condensante", "explain": "Osteomielite com periostite proliferativa (Garré): forma camadas paralelas ('casca de cebola') EXPANDINDO a superficie óssea; a osteíte condensante NÃO expande o osso e fica confinada ao redor do ápice.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg qimg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,24.0 50.0,28.0 42.0,24.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#3a3a3a\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#3a3a3a\"/><circle cx=\"60\" cy=\"92\" r=\"9\" fill=\"#faf6e9\"/><circle cx=\"50\" cy=\"98\" r=\"4.5\" fill=\"#050a12\" stroke=\"#8b94a3\" stroke-width=\"1\"/></svg>", "categoria": "osteomielite"}, {"id": "qi19", "kind": "image", "prompt": "Com base no esquema (tipo radiografia anotada), qual o diagnóstico mais provável?", "options": ["Osteomielite Supurativa Crônica", "Osteíte Condensante", "Cisto Residual", "Osteomielite com Periostite Proliferativa (Garré)"], "correct": "Osteomielite com Periostite Proliferativa (Garré)", "explain": "Osteíte condensante: radiopacidade compacta e confinada ao ápice, SEM expansão nem laminação. Garré tem expansão em camadas paralelas na cortical.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg qimg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"32.0,34.0 68.0,34.0 63.0,92.0 37.0,92.0\" fill=\"none\" stroke=\"#5c6470\" stroke-width=\"2.6\"/><polygon points=\"38.0,36.0 62.0,36.0 54.0,88.0 50.0,96.0 46.0,88.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"27.0,12.0 73.0,12.0 68.0,36.0 32.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"44.0,12.0 56.0,12.0 58.0,24.0 50.0,28.0 42.0,24.0\" fill=\"#241a12\"/><polygon points=\"44.0,16.0 56.0,16.0 53.0,34.0 47.0,34.0\" fill=\"#3a3a3a\"/><rect x=\"47.5\" y=\"34\" width=\"5\" height=\"52\" fill=\"#3a3a3a\"/><circle cx=\"70\" cy=\"90\" r=\"16\" fill=\"none\" stroke=\"#faf6e9\" stroke-width=\"1.3\" opacity=\"0.9\"/><circle cx=\"70\" cy=\"90\" r=\"20\" fill=\"none\" stroke=\"#faf6e9\" stroke-width=\"1.3\" opacity=\"0.78\"/><circle cx=\"70\" cy=\"90\" r=\"24\" fill=\"none\" stroke=\"#faf6e9\" stroke-width=\"1.3\" opacity=\"0.66\"/><circle cx=\"70\" cy=\"90\" r=\"28\" fill=\"none\" stroke=\"#faf6e9\" stroke-width=\"1.3\" opacity=\"0.54\"/></svg>", "categoria": "osteomielite"}, {"id": "qi20", "kind": "image", "prompt": "Com base no esquema (tipo radiografia anotada), qual o diagnóstico mais provável?", "options": ["Abscesso Periapical Agudo", "Periodontite Apical Aguda (Pericementite)", "Osteomielite Supurativa Aguda", "Osteíte Alveolar (Alvéolo Seco)"], "correct": "Osteíte Alveolar (Alvéolo Seco)", "explain": "Osteomielite: a osteíte alveolar fica restrita ao alvéolo pos-extração (sem destruição óssea profunda/sequestro), enquanto a osteomielite envolve infecção óssea verdadeira com possível sequestro.", "svg": "<svg viewBox=\"0 0 100 130\" class=\"dg qimg\" role=\"img\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100\" height=\"130\" fill=\"#0b1220\"/><polygon points=\"14.0,36.0 34.0,36.0 31.0,90.0 17.0,90.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"12.0,14.0 36.0,14.0 34.0,36.0 14.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"66.0,36.0 86.0,36.0 83.0,90.0 69.0,90.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"64.0,14.0 88.0,14.0 86.0,36.0 66.0,36.0\" fill=\"#efe9d8\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"36.0,30.0 64.0,30.0 66.0,95.0 34.0,95.0\" fill=\"#c9c2ab\" stroke=\"#a89f84\" stroke-width=\"1\"/><polygon points=\"42.0,34.0 58.0,34.0 55.0,45.0 60.0,55.0 54.0,66.0 58.0,78.0 50.0,88.0 42.0,78.0 46.0,66.0 40.0,55.0 45.0,45.0\" fill=\"#050a12\" stroke=\"#c6462f\" stroke-width=\"1.3\"/><circle cx=\"46\" cy=\"48\" r=\"1.3\" fill=\"#faf6e9\"/><circle cx=\"52\" cy=\"60\" r=\"1.3\" fill=\"#faf6e9\"/><circle cx=\"47\" cy=\"72\" r=\"1.3\" fill=\"#faf6e9\"/></svg>", "categoria": "osteomielite"}, {"id": "qt01", "kind": "text", "prompt": "Paciente de 23 anos sente dor aguda no dente 34 ao tomar refrigerante gelado, sem edema facial e sem febre. A dor cessa imediatamente após ela parar de beber. Qual o diagnóstico mais provável?", "options": ["Pulpite Reversível", "Pulpite Irreversível", "Necrose Pulpar", "Periodontite Apical Aguda (Pericementite)"], "correct": "Pulpite Reversível", "explain": "Dor CURTA e provocada pelo frio que CESSA ao remover o estímulo e o criterio clássico de pulpite reversível.", "categoria": "pulpar"}, {"id": "qt02", "kind": "text", "prompt": "Mesmo paciente do caso anterior, mas agora a dor NÃO cessa ao parar de beber e continua latejando por horas, piorando quando ela deita. Qual a nova hipótese?", "options": ["Osteíte Alveolar (Alvéolo Seco)", "Pulpite Irreversível", "Pulpite Reversível", "Granuloma Periapical (Periodontite Apical Crônica)"], "correct": "Pulpite Irreversível", "explain": "Dor que CONTINUA após remover o estímulo, piora ao deitar e pode ser espontânea define pulpite irreversível.", "categoria": "pulpar"}, {"id": "qt03", "kind": "text", "prompt": "Criança de 12 anos tem dor difusa e intensa na região superior esquerda, espontânea, que piora com quente e alivia com frio; ha extensa destruição coronal no dente 26, sem edema facial ou febre. Qual a hipótese mais provável?", "options": ["Pulpite Irreversível", "Pulpite Reversível", "Periodontite Apical Aguda (Pericementite)", "Abscesso Periapical Agudo"], "correct": "Pulpite Irreversível", "explain": "Dor espontânea, difícil de localizar (difusa), que piora com calor e alivia com frio e o quadro clássico de pulpite irreversível avançada.", "categoria": "pulpar"}, {"id": "qt04", "kind": "text", "prompt": "No caso anterior, por que o paciente NÃO consegue apontar exatamente qual dente doi?", "options": ["Porque o nervo alveolar inferior foi anestesiado", "Porque nos estágios avançados da pulpite irreversível a dor se torna difusa (fibras nervosas pulpares não localizam bem o estímulo)", "Porque o paciente tem neuralgia do trigêmeo", "Porque ha uma fratura radicular associada"], "correct": "Porque nos estágios avançados da pulpite irreversível a dor se torna difusa (fibras nervosas pulpares não localizam bem o estímulo)", "explain": "Nos estágios iniciais o dente e facilmente identificado; com a evolução da pulpite irreversível a dor passa a ser difusa e mal localizada.", "categoria": "pulpar"}, {"id": "qt05", "kind": "text", "prompt": "Mulher de 38 anos, diabética tipo I não controlada, tem dor pulsatil intensa no dente 37 ha 1 dia, não consegue comer nem dormir, com edema facial cervical iniciado ha 3h, febre de 37.8C e sem alteração radiográfica. Qual a hipótese mais provável?", "options": ["Trombose do Seio Cavernoso", "Angina de Ludwig", "Granuloma Periapical (Periodontite Apical Crônica)", "Abscesso Periapical Agudo com celulite facial"], "correct": "Abscesso Periapical Agudo com celulite facial", "explain": "Dor pulsatil aguda + edema facial evoluindo rápido + febre baixa + diabetes descompensada = abscesso periapical agudo se disseminando como celulite; sem sinais oculares (não e trombose) nem obstrução de via aérea (não e Ludwig).", "categoria": "periapical_aguda"}, {"id": "qt06", "kind": "text", "prompt": "No caso da paciente diabética, qual conduta inicial esta CORRETA?", "options": ["Encaminhar direto para cirurgia de drenagem do seio cavernoso", "Apenas prescrever analgésico e aguardar redução espontânea do edema", "Extrair o dente imediatamente sem qualquer medicação", "Abrir o dente endodonticamente, prescrever antibiótico e analgésico, e reavaliar diariamente"], "correct": "Abrir o dente endodonticamente, prescrever antibiótico e analgésico, e reavaliar diariamente", "explain": "Paciente sistemicamente debilitada (diabetes + febre) exige antibioticoterapia associada ao tratamento odontológico do foco, com reavaliação diária.", "categoria": "periapical_aguda"}, {"id": "qt07", "kind": "text", "prompt": "Radiografia de rotina mostra uma imagem radiolúcida arredondada e BEM delimitada de 1 cm no ápice de um pre-molar inferior desvitalizado, em paciente assintomático. Qual exame CONFIRMA o diagnóstico definitivo (granuloma x cisto)?", "options": ["Exame histopatológico do tecido removido", "Nova radiografia periapical", "Teste de vitalidade pulpar", "Tomografia computadorizada"], "correct": "Exame histopatológico do tecido removido", "explain": "Granuloma e cisto radicular podem ter imagem radiográfica identica; a distinção definitiva depende da presenca de revestimento epitelial, visto so na histopatologia.", "categoria": "periapical_cronica"}, {"id": "qt08", "kind": "text", "prompt": "Paciente com fístula intraoral persistente próxima ao ápice de um dente com necrose pulpar, sem dor, e radiografia mostrando radioluscência com limites MAL definidos. Qual o diagnóstico mais provável?", "options": ["Osteomielite Supurativa Crônica", "Granuloma Periapical (Periodontite Apical Crônica)", "Abscesso Periapical Crônico", "Cisto Radicular (Periapical)"], "correct": "Abscesso Periapical Crônico", "explain": "Contorno radiolúcido MAL definido + fístula ativa + ausência de dor e o padrao do abscesso periapical crônico (granuloma/cisto tem contorno bem definido).", "categoria": "periapical_cronica"}, {"id": "qt09", "kind": "text", "prompt": "Tres dias após a exodontia de um terceiro molar inferior, um paciente fumante relata dor forte irradiando para o ouvido, com odor fétido e alvéolo vazio (sem coágulo) e muito sensível a sondagem. Qual o diagnóstico?", "options": ["Pericoronarite", "Osteíte Alveolar (Alvéolo Seco)", "Abscesso Periapical Agudo", "Osteomielite Supurativa Aguda"], "correct": "Osteíte Alveolar (Alvéolo Seco)", "explain": "Dor de inicio em 3-4 dias, odor fétido e alvéolo sem coágulo (osso exposto e sensível) são clássicos de alveolite, favorecida pelo tabagismo.", "categoria": "osteomielite"}, {"id": "qt10", "kind": "text", "prompt": "No caso do alvéolo seco, qual conduta esta CORRETA?", "options": ["Realizar nova extração do dente adjacente", "Curetar bem o alvéolo para remover todo o tecido residual", "Irrigar com solução salina e usar curativo sedativo, sem curetar o alvéolo", "Prescrever apenas antibiótico sistêmico, sem qualquer manejo local"], "correct": "Irrigar com solução salina e usar curativo sedativo, sem curetar o alvéolo", "explain": "A curetagem do alvéolo seco e contraindicada por aumentar a dor; o manejo e irrigação suave, curativo sedativo e analgesia potente.", "categoria": "osteomielite"}, {"id": "qt11", "kind": "text", "prompt": "Adolescente de 13 anos apresenta aumento de volume assimetrico e indolor na mandíbula; a tomografia mostra camadas ósseas radiopacas paralelas ('casca de cebola') associadas a um molar cariado. Qual o diagnóstico?", "options": ["Osteíte Condensante", "Cisto Residual", "Osteomielite com Periostite Proliferativa (Garré)", "Osteomielite Supurativa Crônica"], "correct": "Osteomielite com Periostite Proliferativa (Garré)", "explain": "Laminações radiopacas paralelas expandindo a cortical, em paciente jovem, são o achado clássico da osteomielite de Garré.", "categoria": "osteomielite"}, {"id": "qt12", "kind": "text", "prompt": "Achado radiográfico casual em jovem assintomático: área radiopaca BEM definida e uniforme, SEM expansão óssea, junto ao ápice de um pre-molar inferior com cárie profunda. Qual o diagnóstico?", "options": ["Granuloma Periapical (Periodontite Apical Crônica)", "Osteíte Condensante", "Osteomielite com Periostite Proliferativa (Garré)", "Osteomielite Supurativa Crônica"], "correct": "Osteíte Condensante", "explain": "Radiopacidade uniforme, sem expansão, junto ao ápice de dente com pulpite/necrose, indolor e achado casual: osteíte condensante.", "categoria": "osteomielite"}, {"id": "qt13", "kind": "text", "prompt": "Paciente com infecção odontogênica evoluindo ha 2 meses, fístula cutanea, fragmentos ósseos radiopacos soltos (sequestros) na radiografia e dor moderada. Qual o diagnóstico?", "options": ["Osteomielite Supurativa Crônica", "Osteomielite Supurativa Aguda", "Osteíte Condensante", "Osteíte Alveolar (Alvéolo Seco)"], "correct": "Osteomielite Supurativa Crônica", "explain": "Evolução maior que 1 mês, fístula e sequestros ósseos caracterizam a forma crônica (a aguda dura menos de 1 mês e e mais intensa).", "categoria": "osteomielite"}, {"id": "qt14", "kind": "text", "prompt": "Paciente evolui após abscesso dentário não tratado com edema periorbitário BILATERAL, protrusão e FIXAÇÃO do globo ocular, febre alta e cefaleia. Qual o diagnóstico e a conduta?", "options": ["Celulite Facial - antibiótico oral ambulatorial", "Angina de Ludwig - manutenção de via aérea prioritária", "Trombose do Seio Cavernoso - emergência hospitalar com drenagem cirúrgica e antibiótico em altas doses", "Osteomielite Supurativa Aguda - antibiótico e drenagem odontológica"], "correct": "Trombose do Seio Cavernoso - emergência hospitalar com drenagem cirúrgica e antibiótico em altas doses", "explain": "Edema periorbitário BILATERAL com protrusão/fixação ocular e sinal de alarme para trombose do seio cavernoso, emergência com alta mortalidade se não tratada rápido.", "categoria": "disseminacao"}, {"id": "qt15", "kind": "text", "prompt": "Paciente com infecção de molar inferior evolui com tumefação bilateral do assoalho da boca, língua elevada, dificuldade para respirar e necessidade de ficar sentado ereto. Qual o diagnóstico e a prioridade de tratamento?", "options": ["Celulite Facial - antibiótico oral e observação", "Angina de Ludwig - manter via aérea e depois drenar/tratar o foco", "Abscesso Periapical Crônico - endodontia eletiva", "Trombose do Seio Cavernoso - avaliação oftalmológica"], "correct": "Angina de Ludwig - manter via aérea e depois drenar/tratar o foco", "explain": "Tumefação bilateral do assoalho bucal com elevação da língua e sinais de obstrução respiratória e Angina de Ludwig: a prioridade SEMPRE e garantir a via aérea.", "categoria": "disseminacao"}]};
+  var CATS = DATA.categories;
+  var CAT_LABEL = {}; CATS.forEach(function(c){ CAT_LABEL[c.id] = c.label; });
+  var CAT_COLOR = {
+    pulpar: "var(--accent)",
+    periapical_aguda: "var(--danger)",
+    periapical_cronica: "var(--gold)",
+    disseminacao: "var(--plum)",
+    osteomielite: "var(--blue)",
+    geral: "var(--ink-soft)"
+  };
+  var CAT_SOFT = {
+    pulpar: "var(--accent-soft)",
+    periapical_aguda: "var(--danger-soft)",
+    periapical_cronica: "var(--gold-soft)",
+    disseminacao: "var(--plum-soft)",
+    osteomielite: "var(--blue-soft)",
+    geral: "var(--surface-2)"
+  };
+
+  function storage(key, val){
+    try{
+      if(val === undefined) return localStorage.getItem(key);
+      localStorage.setItem(key, val);
+    }catch(e){ /* ignora (privado/bloqueado) */ }
+  }
+
+  var state = {
+    mode: storage("pp_mode") || "flashcards",
+    category: storage("pp_cat") || "all",
+    flashOrder: [],
+    flashIndex: 0,
+    quizOrder: [],
+    quizIndex: 0,
+    quizScore: 0,
+    quizAnswered: false
+  };
+
+  function filteredDiseases(){
+    if(state.category === "all") return DATA.diseases;
+    return DATA.diseases.filter(function(d){ return d.categoria === state.category; });
+  }
+  function filteredQuiz(){
+    if(state.category === "all") return DATA.quiz;
+    return DATA.quiz.filter(function(q){ return q.categoria === state.category; });
+  }
+  function shuffle(arr){
+    var a = arr.slice();
+    for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+    return a;
+  }
+
+  /* ---------------- chips ---------------- */
+  function renderChips(){
+    var bar = document.getElementById("filterbar");
+    bar.innerHTML = "";
+    var all = mkChip("all", "Todas", DATA.diseases.length);
+    bar.appendChild(all);
+    CATS.forEach(function(c){
+      var n = DATA.diseases.filter(function(d){ return d.categoria === c.id; }).length;
+      bar.appendChild(mkChip(c.id, c.label, n));
+    });
+  }
+  function mkChip(id, label, n){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "chip"; b.textContent = label;
+    var span = document.createElement("span"); span.className = "n"; span.textContent = n;
+    b.appendChild(span);
+    b.dataset.active = (state.category === id) ? "true" : "false";
+    b.addEventListener("click", function(){
+      state.category = id; storage("pp_cat", id);
+      resetFlash(); resetQuiz();
+      renderChips(); renderAll();
+    });
+    return b;
+  }
+
+  /* ---------------- flashcards ---------------- */
+  function resetFlash(){
+    state.flashOrder = filteredDiseases().map(function(d){ return d.id; });
+    state.flashIndex = 0;
+  }
+  function currentCard(){
+    var list = filteredDiseases();
+    if(!list.length) return null;
+    var id = state.flashOrder[state.flashIndex];
+    return list.find(function(d){ return d.id === id; }) || list[0];
+  }
+  function renderFlash(){
+    var list = filteredDiseases();
+    var card = document.getElementById("flashcard");
+    if(!list.length){
+      document.getElementById("deckCount").textContent = "0 / 0";
+      card.hidden = true;
+      return;
+    }
+    card.hidden = false;
+    card.dataset.flipped = "false";
+    var d = currentCard();
+    document.getElementById("deckCount").textContent = (state.flashIndex+1) + " / " + list.length;
+    var cat = document.getElementById("frontCat");
+    cat.textContent = CAT_LABEL[d.categoria];
+    cat.style.background = CAT_SOFT[d.categoria]; cat.style.color = CAT_COLOR[d.categoria];
+    document.getElementById("frontImg").innerHTML = d.svg;
+    document.getElementById("frontResumo").textContent = d.resumo;
+    document.getElementById("backName").textContent = d.nome;
+    document.getElementById("backBody").innerHTML = [
+      ["Características clínicas", d.clinico],
+      ["Localização típica", d.localizacao],
+      ["Causa / etiologia", d.etiologia],
+      ["Sintomas", d.sintomas],
+      ["Testes / vitalidade", d.testes],
+      ["Radiografia", d.radiografico],
+      ["Tratamento", d.tratamento],
+      ["Como diferenciar", d.diferenciar]
+    ].map(function(sec){
+      return '<div class="bk"><span class="lbl">'+sec[0]+'</span><p>'+sec[1]+'</p></div>';
+    }).join("");
+  }
+  function stepFlash(delta){
+    var list = filteredDiseases();
+    if(!list.length) return;
+    state.flashIndex = (state.flashIndex + delta + list.length) % list.length;
+    renderFlash();
+  }
+
+  /* ---------------- quiz ---------------- */
+  function resetQuiz(){
+    state.quizOrder = shuffle(filteredQuiz());
+    state.quizIndex = 0; state.quizScore = 0; state.quizAnswered = false;
+    document.getElementById("quizEnd").hidden = true;
+    document.getElementById("quizActive").hidden = false;
+  }
+  function renderQuiz(){
+    var list = state.quizOrder;
+    var activeBox = document.getElementById("quizActive");
+    if(!list.length){
+      activeBox.hidden = true;
+      document.getElementById("quizEnd").hidden = true;
+      return;
+    }
+    if(state.quizIndex >= list.length){
+      finishQuiz(); return;
+    }
+    activeBox.hidden = false;
+    document.getElementById("quizEnd").hidden = true;
+    var q = list[state.quizIndex];
+    document.getElementById("quizCounter").textContent = (state.quizIndex+1) + " / " + list.length;
+    document.getElementById("quizBar").style.width = Math.round((state.quizIndex)/list.length*100) + "%";
+    document.getElementById("quizScore").textContent = "Acertos: " + state.quizScore;
+    var media = document.getElementById("quizMedia");
+    if(q.kind === "image"){ media.hidden = false; media.innerHTML = '<div class="dg-frame">'+q.svg+'</div>'; }
+    else { media.hidden = true; media.innerHTML = ""; }
+    document.getElementById("quizPrompt").textContent = q.prompt;
+    var wrap = document.getElementById("quizOptions");
+    wrap.innerHTML = "";
+    var letters = ["A","B","C","D"];
+    q.options.forEach(function(opt, i){
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "qopt";
+      b.innerHTML = '<span class="k">'+letters[i]+'</span><span>'+opt+'</span>';
+      b.addEventListener("click", function(){ answerQuiz(opt, b); });
+      wrap.appendChild(b);
+    });
+    document.getElementById("quizFeedback").hidden = true;
+    document.getElementById("quizNext").hidden = true;
+    state.quizAnswered = false;
+  }
+  function answerQuiz(chosen, btnEl){
+    if(state.quizAnswered) return;
+    state.quizAnswered = true;
+    var q = state.quizOrder[state.quizIndex];
+    var correct = chosen === q.correct;
+    if(correct) state.quizScore++;
+    Array.prototype.forEach.call(document.querySelectorAll(".qopt"), function(b){
+      b.disabled = true;
+      var label = b.querySelector("span:last-child").textContent;
+      if(label === q.correct) b.dataset.state = "correct";
+      else if(b === btnEl) b.dataset.state = "wrong";
+    });
+    var fb = document.getElementById("quizFeedback");
+    fb.hidden = false;
+    fb.className = "quiz-feedback " + (correct ? "ok" : "bad");
+    fb.innerHTML = "<b>" + (correct ? "Correto." : "Não é isso.") + "</b> " + q.explain;
+    document.getElementById("quizScore").textContent = "Acertos: " + state.quizScore;
+    document.getElementById("quizNext").hidden = false;
+  }
+  function finishQuiz(){
+    document.getElementById("quizActive").hidden = true;
+    var end = document.getElementById("quizEnd");
+    end.hidden = false;
+    var total = state.quizOrder.length;
+    document.getElementById("quizFinalScore").textContent = state.quizScore + "/" + total;
+    var pct = total ? Math.round(state.quizScore/total*100) : 0;
+    var msg = pct >= 80 ? "Muito bem — você está pronto(a) para a prova."
+             : pct >= 50 ? "Bom começo. Revise os cartões das questões erradas."
+             : "Vale revisar os flashcards antes de tentar de novo.";
+    document.getElementById("quizFinalMsg").textContent = pct + "% de acertos. " + msg;
+  }
+
+  /* ---------------- table ---------------- */
+  function renderTable(){
+    var q = (document.getElementById("tableSearch").value || "").toLowerCase();
+    var list = filteredDiseases().filter(function(d){
+      if(!q) return true;
+      var hay = [d.nome, d.aparenciaCurta, d.localizacao, d.causaCurta, d.tratamentoCurto, d.clinico].join(" ").toLowerCase();
+      return hay.indexOf(q) !== -1;
+    });
+    var tbody = document.getElementById("tableBody");
+    if(!list.length){
+      tbody.innerHTML = '<tr><td colspan="6" class="empty-msg">Nenhuma doença encontrada.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = list.map(function(d){
+      return '<tr>'
+        + '<td class="cat-dot"><span class="dot" style="background:'+CAT_COLOR[d.categoria]+'" title="'+CAT_LABEL[d.categoria]+'"></span></td>'
+        + '<td class="name">'+d.nome+'</td>'
+        + '<td>'+d.aparenciaCurta+'</td>'
+        + '<td>'+d.localizacao+'</td>'
+        + '<td>'+d.causaCurta+'</td>'
+        + '<td>'+d.tratamentoCurto+'</td>'
+        + '</tr>';
+    }).join("");
+  }
+
+  /* ---------------- mode switching ---------------- */
+  function renderAll(){
+    if(state.mode === "flashcards"){ if(!state.flashOrder.length) resetFlash(); renderFlash(); }
+    if(state.mode === "quiz"){ if(!state.quizOrder.length) resetQuiz(); renderQuiz(); }
+    if(state.mode === "table"){ renderTable(); }
+  }
+  function setMode(mode){
+    state.mode = mode; storage("pp_mode", mode);
+    Array.prototype.forEach.call(document.querySelectorAll(".modebar button"), function(b){
+      var on = b.dataset.mode === mode;
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    ["flashcards","quiz","table"].forEach(function(m){
+      document.getElementById("view-"+m).classList.toggle("active", m === mode);
+    });
+    renderAll();
+  }
+
+  /* ---------------- wire up ---------------- */
+  Array.prototype.forEach.call(document.querySelectorAll(".modebar button"), function(b){
+    b.addEventListener("click", function(){ setMode(b.dataset.mode); });
+  });
+  document.getElementById("flashcard").addEventListener("click", function(){
+    var flipped = this.dataset.flipped === "true";
+    this.dataset.flipped = flipped ? "false" : "true";
+  });
+  document.getElementById("flipBtn").addEventListener("click", function(){
+    document.getElementById("flashcard").click();
+  });
+  document.getElementById("prevBtn").addEventListener("click", function(){ stepFlash(-1); });
+  document.getElementById("nextBtn").addEventListener("click", function(){ stepFlash(1); });
+  document.getElementById("shuffleBtn").addEventListener("click", function(){
+    state.flashOrder = shuffle(state.flashOrder); state.flashIndex = 0; renderFlash();
+  });
+  document.getElementById("quizNext").addEventListener("click", function(){
+    state.quizIndex++; renderQuiz();
+  });
+  document.getElementById("quizRestart").addEventListener("click", function(){
+    resetQuiz(); renderQuiz();
+  });
+  document.getElementById("tableSearch").addEventListener("input", renderTable);
+  document.addEventListener("keydown", function(e){
+    if(state.mode !== "flashcards") return;
+    if(e.key === "ArrowLeft") stepFlash(-1);
+    if(e.key === "ArrowRight") stepFlash(1);
+    if(e.key === " "){ e.preventDefault(); document.getElementById("flashcard").click(); }
+  });
+
+  renderChips();
+  setMode(state.mode);
+})();
+</script>

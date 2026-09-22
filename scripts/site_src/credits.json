@@ -1,0 +1,37 @@
+{
+  "necrose_pulpar": {
+    "file": "images/necrose_pulpar.jpg",
+    "license": "CC BY-SA 3.0",
+    "author": "Michele Gardini (anotação: Lesion)",
+    "source": "https://commons.wikimedia.org/wiki/File:Chronic_apical_periodontitis.jpg",
+    "caption": "Radiografia periapical de pré-molar com perda óssea apical (seta) — consequência radiográfica da necrose pulpar."
+  },
+  "abscesso_periapical_agudo": {
+    "file": "images/abscesso_periapical_agudo.jpg",
+    "license": "CC BY-SA 3.0",
+    "author": "Coronation Dental Specialty Group",
+    "source": "https://commons.wikimedia.org/wiki/File:Abscessed_tooth_periapical_radiograph.jpg",
+    "caption": "Radiografia periapical do dente 3.6 mostrando abscesso periapical envolvendo as duas raízes."
+  },
+  "granuloma_periapical": {
+    "file": "images/granuloma_periapical.jpg",
+    "license": "CC BY-SA 4.0",
+    "author": "Anna.Massini",
+    "source": "https://commons.wikimedia.org/wiki/File:Granuloma_sotto_dente_gi%C3%A0_devitalizzato_-_visione_di_lastra_su_schermo.jpg",
+    "caption": "Radiografia de dente tratado endodonticamente mostrando granuloma periapical."
+  },
+  "abscesso_periapical_cronico": {
+    "file": "images/abscesso_periapical_cronico.jpg",
+    "license": "CC BY-SA 3.0",
+    "author": "Damdent",
+    "source": "https://commons.wikimedia.org/wiki/File:Abces_parulique.jpg",
+    "caption": "Fístula gengival ativa (parúlide) drenando abscesso periapical crônico."
+  },
+  "pulpite_reversivel": {
+    "file": "images/pulpite_reversivel.jpg",
+    "license": "CC BY-SA 4.0",
+    "author": "Suyash Dwivedi",
+    "source": "https://commons.wikimedia.org/wiki/File:Dental_Caries_Cavity_2.JPG",
+    "caption": "Cavidade de cárie profunda em molar — lesão típica que pode causar pulpite reversível."
+  }
+}

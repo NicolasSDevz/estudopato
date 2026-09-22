@@ -1,0 +1,632 @@
+<title>Patologia da Polpa</title>
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f1e8;
+    --surface:#ffffff;
+    --surface-2:#ece6d4;
+    --surface-3:#e2dabe;
+    --line:#d9d0b4;
+    --ink:#20241c;
+    --ink-soft:#5d6357;
+    --ink-faint:#8a8e7d;
+    --accent:#0f6e5c;
+    --accent-ink:#ffffff;
+    --accent-soft:#dcece5;
+    --danger:#a8402f;
+    --danger-soft:#f3e0da;
+    --gold:#8a6a1c;
+    --gold-soft:#efe6cd;
+    --plum:#7a2f3a;
+    --plum-soft:#f0dfe0;
+    --blue:#385876;
+    --blue-soft:#dee6ec;
+    --film:#0b1220;
+    --shadow:0 1px 2px rgba(30,26,14,.06), 0 8px 24px -12px rgba(30,26,14,.22);
+    --radius-lg:20px;
+    --radius-md:14px;
+    --radius-sm:9px;
+    --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#12181a; --surface:#1a2225; --surface-2:#212b2d; --surface-3:#293436;
+      --line:#333f41; --ink:#eef1ea; --ink-soft:#aab4ac; --ink-faint:#78837e;
+      --accent:#3fae93; --accent-ink:#08201a; --accent-soft:#1c3a34;
+      --danger:#e28271; --danger-soft:#3d2624; --gold:#d3af5a; --gold-soft:#3a3220;
+      --plum:#dd8f9c; --plum-soft:#3a252a; --blue:#8fb3d6; --blue-soft:#22323f;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 30px -14px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#12181a; --surface:#1a2225; --surface-2:#212b2d; --surface-3:#293436;
+    --line:#333f41; --ink:#eef1ea; --ink-soft:#aab4ac; --ink-faint:#78837e;
+    --accent:#3fae93; --accent-ink:#08201a; --accent-soft:#1c3a34;
+    --danger:#e28271; --danger-soft:#3d2624; --gold:#d3af5a; --gold-soft:#3a3220;
+    --plum:#dd8f9c; --plum-soft:#3a252a; --blue:#8fb3d6; --blue-soft:#22323f;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 30px -14px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg); color:var(--ink); font-family:var(--sans);
+    -webkit-font-smoothing:antialiased; padding-inline:16px;
+  }
+  h1,h2,h3{font-family:var(--serif); font-weight:600; text-wrap:balance; margin:0;}
+  .wrap{max-width:920px; margin-inline:auto;}
+  button{font:inherit; color:inherit;}
+  ::selection{background:var(--accent); color:var(--accent-ink);}
+  .sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:6px;}
+  a{color:var(--accent);}
+
+  /* ---------- topbar ---------- */
+  .topbar{padding-block:22px 14px; text-align:center;}
+  .eyebrow{
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent); font-weight:600; margin:0 0 6px;
+  }
+  .topbar h1{font-size:clamp(26px,5vw,34px); line-height:1.1;}
+  .topbar p{margin:8px 0 0; color:var(--ink-soft); font-size:14.5px; max-width:52ch; margin-inline:auto;}
+
+  /* ---------- mode tabs ---------- */
+  .modebar{
+    display:flex; gap:4px; background:var(--surface-2); border:1px solid var(--line);
+    border-radius:999px; padding:4px; max-width:520px; margin:20px auto 14px;
+  }
+  .modebar button{
+    flex:1; border:none; background:transparent; padding:9px 10px; border-radius:999px;
+    font-weight:600; font-size:14px; color:var(--ink-soft); cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    transition:background .15s ease, color .15s ease;
+  }
+  .modebar button svg{width:16px; height:16px; flex:none;}
+  .modebar button.active{background:var(--surface); color:var(--ink); box-shadow:var(--shadow);}
+  .modebar button:hover:not(.active){color:var(--ink);}
+
+  /* ---------- category chips ---------- */
+  .filterbar{
+    display:flex; gap:8px; overflow-x:auto; padding:2px 2px 14px; margin-bottom:6px;
+    scrollbar-width:thin;
+  }
+  .chip{
+    flex:none; border:1px solid var(--line); background:var(--surface); color:var(--ink-soft);
+    padding:7px 14px; border-radius:999px; font-size:13px; font-weight:600; cursor:pointer;
+    white-space:nowrap; transition:.15s ease;
+  }
+  .chip[data-active="true"]{background:var(--ink); color:var(--bg); border-color:var(--ink);}
+  .chip .n{font-family:var(--mono); font-weight:500; opacity:.7; margin-left:5px;}
+
+  main{padding-bottom:56px;}
+  .view{display:none;}
+  .view.active{display:block;}
+
+  /* ================= FLASHCARDS ================= */
+  .deck-meta{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; gap:10px;}
+  .deck-count{font-family:var(--mono); font-size:13px; color:var(--ink-soft);}
+  .iconbtn{
+    border:1px solid var(--line); background:var(--surface); border-radius:10px; padding:8px 12px;
+    cursor:pointer; font-size:13px; font-weight:600; display:flex; align-items:center; gap:6px;
+    color:var(--ink-soft);
+  }
+  .iconbtn:hover{color:var(--ink); border-color:var(--ink-faint);}
+  .iconbtn svg{width:15px; height:15px;}
+
+  .card-stage{perspective:1600px; margin-inline:auto; max-width:420px;}
+  .flashcard{
+    width:100%; aspect-ratio:5/7; background:none; border:none; padding:0; cursor:pointer;
+    display:block;
+  }
+  .flashcard-inner{
+    position:relative; width:100%; height:100%; transition:transform .55s cubic-bezier(.2,.8,.2,1);
+    transform-style:preserve-3d;
+  }
+  .flashcard[data-flipped="true"] .flashcard-inner{transform:rotateY(180deg);}
+  .face{
+    position:absolute; inset:0; backface-visibility:hidden; border-radius:var(--radius-lg);
+    border:1px solid var(--line); background:var(--surface); box-shadow:var(--shadow);
+    display:flex; flex-direction:column; text-align:left; overflow:hidden;
+  }
+  .face.back{transform:rotateY(180deg); overflow-y:auto;}
+  .face.front{align-items:center; justify-content:center; padding:22px 20px 18px; gap:12px;}
+  .cat-tag{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
+    font-weight:600; padding:4px 10px; border-radius:999px;
+  }
+  .dg-frame{
+    width:78%; max-width:230px; border-radius:14px; overflow:hidden; border:1px solid var(--line);
+    box-shadow:0 6px 18px -10px rgba(0,0,0,.4);
+  }
+  .dg-frame svg{display:block; width:100%; height:auto;}
+  .front .hint{color:var(--ink-faint); font-size:12.5px; font-weight:600; margin-top:auto;}
+  .front .resumo{color:var(--ink-soft); font-size:13.5px; text-align:center; max-width:32ch;}
+
+  .face.back .back-head{
+    padding:18px 20px 12px; border-bottom:1px solid var(--line); flex:none;
+  }
+  .face.back .back-head h3{font-size:19px; line-height:1.2;}
+  .face.back .back-body{padding:14px 20px 20px; display:flex; flex-direction:column; gap:12px;}
+  .bk{display:flex; flex-direction:column; gap:3px;}
+  .bk .lbl{
+    font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em;
+    color:var(--accent); font-weight:600;
+  }
+  .bk p{margin:0; font-size:13.3px; line-height:1.5; color:var(--ink);}
+
+  .deck-nav{display:flex; align-items:center; justify-content:center; gap:10px; margin-top:16px;}
+  .btn{
+    border-radius:12px; padding:11px 18px; font-weight:600; font-size:14px; cursor:pointer;
+    border:1px solid var(--line); background:var(--surface); color:var(--ink);
+  }
+  .btn:hover{border-color:var(--ink-faint);}
+  .btn.primary{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+  .btn.ghost{background:transparent;}
+  .btn:disabled{opacity:.4; cursor:not-allowed;}
+  .btn.round{border-radius:50%; width:44px; height:44px; padding:0; display:flex; align-items:center; justify-content:center;}
+  .btn.round svg{width:18px; height:18px;}
+
+  /* ================= QUIZ ================= */
+  .quiz-progress{display:flex; align-items:center; gap:12px; margin-bottom:16px;}
+  .bar{flex:1; height:7px; border-radius:99px; background:var(--surface-2); overflow:hidden;}
+  .bar > span{display:block; height:100%; background:var(--accent); border-radius:99px; transition:width .3s ease;}
+  .score{font-family:var(--mono); font-size:13px; color:var(--ink-soft); white-space:nowrap;}
+  .quiz-card{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-lg);
+    box-shadow:var(--shadow); padding:22px; max-width:620px; margin-inline:auto;
+  }
+  .quiz-media{display:flex; justify-content:center; margin-bottom:16px;}
+  .quiz-media .dg-frame{width:160px;}
+  .quiz-prompt{font-size:16.5px; line-height:1.45; margin:0 0 18px; font-weight:500;}
+  .quiz-options{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .qopt{
+    text-align:left; border:1.5px solid var(--line); background:var(--surface-2); border-radius:12px;
+    padding:12px 14px; cursor:pointer; font-size:13.6px; line-height:1.4; display:flex; gap:10px;
+    align-items:flex-start;
+  }
+  .qopt .k{
+    font-family:var(--mono); font-weight:700; color:var(--ink-faint); flex:none;
+  }
+  .qopt:hover:not([disabled]){border-color:var(--accent);}
+  .qopt[data-state="correct"]{background:var(--accent-soft); border-color:var(--accent); color:var(--ink);}
+  .qopt[data-state="wrong"]{background:var(--danger-soft); border-color:var(--danger); color:var(--ink);}
+  .qopt[disabled]{cursor:default;}
+  .quiz-feedback{
+    margin-top:16px; padding:14px 16px; border-radius:12px; font-size:13.6px; line-height:1.55;
+    background:var(--surface-2); border:1px solid var(--line);
+  }
+  .quiz-feedback b{font-family:var(--serif);}
+  .quiz-feedback.ok{background:var(--accent-soft);}
+  .quiz-feedback.bad{background:var(--danger-soft);}
+  .quiz-foot{display:flex; justify-content:flex-end; margin-top:16px;}
+  .quiz-end{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-lg);
+    box-shadow:var(--shadow); padding:34px 24px; text-align:center; max-width:480px; margin-inline:auto;
+  }
+  .quiz-end .big{font-family:var(--serif); font-size:44px; color:var(--accent);}
+
+  /* ================= TABLE ================= */
+  .table-toolbar{display:flex; margin-bottom:12px;}
+  .search{
+    width:100%; padding:11px 14px; border-radius:12px; border:1px solid var(--line);
+    background:var(--surface); color:var(--ink); font-size:14px;
+  }
+  .table-scroll{overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius-md); background:var(--surface);}
+  table{border-collapse:collapse; width:100%; min-width:820px; font-size:13px;}
+  thead th{
+    text-align:left; font-family:var(--mono); font-size:10.6px; text-transform:uppercase; letter-spacing:.06em;
+    color:var(--ink-soft); background:var(--surface-2); padding:11px 14px; border-bottom:1px solid var(--line);
+    position:sticky; top:0;
+  }
+  tbody td{padding:12px 14px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.45;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:var(--surface-2);}
+  td.name{font-weight:700; white-space:nowrap;}
+  td.cat-dot{width:10px; padding-right:0;}
+  .dot{width:9px; height:9px; border-radius:50%; display:inline-block;}
+  .empty-msg{padding:40px 20px; text-align:center; color:var(--ink-faint); font-size:14px;}
+
+  footer{max-width:920px; margin:10px auto 30px; text-align:center; color:var(--ink-faint); font-size:12px; line-height:1.7;}
+
+  @media (max-width:520px){
+    .quiz-options{grid-template-columns:1fr;}
+    .card-stage{max-width:340px;}
+  }
+</style>
+
+<div class="wrap">
+  <header class="topbar">
+    <p class="eyebrow">Patologia Bucal &middot; UNESC</p>
+    <h1>Doenças da Polpa e do Periápice</h1>
+    <p>Flashcards, quiz e tabela comparativa para revisão de prova — pulpites, alterações periapicais, complicações por disseminação e osteomielites.</p>
+  </header>
+
+  <nav class="modebar" role="tablist" aria-label="Modo de estudo">
+    <button type="button" data-mode="flashcards" class="active" role="tab" aria-selected="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="14" height="14" rx="2"/><path d="M7 3h14v14"/></svg>
+      Flashcards
+    </button>
+    <button type="button" data-mode="quiz" role="tab" aria-selected="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.8-2.2 2-2.4 3.6"/><circle cx="12" cy="16.6" r=".4" fill="currentColor"/></svg>
+      Quiz
+    </button>
+    <button type="button" data-mode="table" role="tab" aria-selected="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10"/></svg>
+      Tabela
+    </button>
+  </nav>
+
+  <div class="filterbar" id="filterbar"></div>
+
+  <main>
+    <!-- FLASHCARDS -->
+    <section class="view active" id="view-flashcards">
+      <div class="deck-meta">
+        <span class="deck-count" id="deckCount">1 / 20</span>
+        <button type="button" class="iconbtn" id="shuffleBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5"/><path d="M4 20 21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg>
+          Embaralhar
+        </button>
+      </div>
+      <div class="card-stage">
+        <button type="button" class="flashcard" id="flashcard" data-flipped="false" aria-label="Cartão de estudo. Toque para ver a resposta.">
+          <div class="flashcard-inner">
+            <div class="face front">
+              <span class="cat-tag" id="frontCat"></span>
+              <div class="dg-frame" id="frontImg"></div>
+              <p class="resumo" id="frontResumo"></p>
+              <span class="hint">toque para virar ↻</span>
+            </div>
+            <div class="face back">
+              <div class="back-head"><h3 id="backName"></h3></div>
+              <div class="back-body" id="backBody"></div>
+            </div>
+          </div>
+        </button>
+      </div>
+      <div class="deck-nav">
+        <button type="button" class="btn round" id="prevBtn" aria-label="Cartão anterior">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button type="button" class="btn primary" id="flipBtn">Virar cartão</button>
+        <button type="button" class="btn round" id="nextBtn" aria-label="Próximo cartão">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section class="view" id="view-quiz">
+      <div id="quizActive">
+        <div class="quiz-progress">
+          <span class="score" id="quizCounter">1 / 35</span>
+          <div class="bar"><span id="quizBar" style="width:0%"></span></div>
+          <span class="score" id="quizScore">Acertos: 0</span>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-media" id="quizMedia" hidden></div>
+          <p class="quiz-prompt" id="quizPrompt"></p>
+          <div class="quiz-options" id="quizOptions"></div>
+          <div class="quiz-feedback" id="quizFeedback" hidden></div>
+          <div class="quiz-foot">
+            <button type="button" class="btn primary" id="quizNext" hidden>Próxima pergunta →</button>
+          </div>
+        </div>
+      </div>
+      <div class="quiz-end" id="quizEnd" hidden>
+        <p class="eyebrow" style="text-align:center">Resultado</p>
+        <div class="big" id="quizFinalScore">0/0</div>
+        <p id="quizFinalMsg" style="color:var(--ink-soft); margin:6px 0 20px;"></p>
+        <button type="button" class="btn primary" id="quizRestart">Refazer questões</button>
+      </div>
+    </section>
+
+    <!-- TABLE -->
+    <section class="view" id="view-table">
+      <div class="table-toolbar">
+        <input type="search" class="search" id="tableSearch" placeholder="Buscar por doença, sintoma, causa…" aria-label="Buscar na tabela">
+      </div>
+      <div class="table-scroll">
+        <table id="dataTable">
+          <thead>
+            <tr>
+              <th></th><th>Doença</th><th>Aparência clínica</th><th>Localização</th><th>Causa</th><th>Tratamento</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Material de revisão baseado nos slides "Doenças da Polpa e Periápice" (Profa. Ângela Maragno) — Patologia Bucal, UNESC.<br>
+    Esquemas ilustrativos autorais no padrão didático de raio-X anotado; não substituem as referências bibliográficas do plano de ensino.
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var DATA = /*__DATA_JSON__*/;
+  var CATS = DATA.categories;
+  var CAT_LABEL = {}; CATS.forEach(function(c){ CAT_LABEL[c.id] = c.label; });
+  var CAT_COLOR = {
+    pulpar: "var(--accent)",
+    periapical_aguda: "var(--danger)",
+    periapical_cronica: "var(--gold)",
+    disseminacao: "var(--plum)",
+    osteomielite: "var(--blue)",
+    geral: "var(--ink-soft)"
+  };
+  var CAT_SOFT = {
+    pulpar: "var(--accent-soft)",
+    periapical_aguda: "var(--danger-soft)",
+    periapical_cronica: "var(--gold-soft)",
+    disseminacao: "var(--plum-soft)",
+    osteomielite: "var(--blue-soft)",
+    geral: "var(--surface-2)"
+  };
+
+  function storage(key, val){
+    try{
+      if(val === undefined) return localStorage.getItem(key);
+      localStorage.setItem(key, val);
+    }catch(e){ /* ignora (privado/bloqueado) */ }
+  }
+
+  var state = {
+    mode: storage("pp_mode") || "flashcards",
+    category: storage("pp_cat") || "all",
+    flashOrder: [],
+    flashIndex: 0,
+    quizOrder: [],
+    quizIndex: 0,
+    quizScore: 0,
+    quizAnswered: false
+  };
+
+  function filteredDiseases(){
+    if(state.category === "all") return DATA.diseases;
+    return DATA.diseases.filter(function(d){ return d.categoria === state.category; });
+  }
+  function filteredQuiz(){
+    if(state.category === "all") return DATA.quiz;
+    return DATA.quiz.filter(function(q){ return q.categoria === state.category; });
+  }
+  function shuffle(arr){
+    var a = arr.slice();
+    for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+    return a;
+  }
+
+  /* ---------------- chips ---------------- */
+  function renderChips(){
+    var bar = document.getElementById("filterbar");
+    bar.innerHTML = "";
+    var all = mkChip("all", "Todas", DATA.diseases.length);
+    bar.appendChild(all);
+    CATS.forEach(function(c){
+      var n = DATA.diseases.filter(function(d){ return d.categoria === c.id; }).length;
+      bar.appendChild(mkChip(c.id, c.label, n));
+    });
+  }
+  function mkChip(id, label, n){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "chip"; b.textContent = label;
+    var span = document.createElement("span"); span.className = "n"; span.textContent = n;
+    b.appendChild(span);
+    b.dataset.active = (state.category === id) ? "true" : "false";
+    b.addEventListener("click", function(){
+      state.category = id; storage("pp_cat", id);
+      resetFlash(); resetQuiz();
+      renderChips(); renderAll();
+    });
+    return b;
+  }
+
+  /* ---------------- flashcards ---------------- */
+  function resetFlash(){
+    state.flashOrder = filteredDiseases().map(function(d){ return d.id; });
+    state.flashIndex = 0;
+  }
+  function currentCard(){
+    var list = filteredDiseases();
+    if(!list.length) return null;
+    var id = state.flashOrder[state.flashIndex];
+    return list.find(function(d){ return d.id === id; }) || list[0];
+  }
+  function renderFlash(){
+    var list = filteredDiseases();
+    var card = document.getElementById("flashcard");
+    if(!list.length){
+      document.getElementById("deckCount").textContent = "0 / 0";
+      card.hidden = true;
+      return;
+    }
+    card.hidden = false;
+    card.dataset.flipped = "false";
+    var d = currentCard();
+    document.getElementById("deckCount").textContent = (state.flashIndex+1) + " / " + list.length;
+    var cat = document.getElementById("frontCat");
+    cat.textContent = CAT_LABEL[d.categoria];
+    cat.style.background = CAT_SOFT[d.categoria]; cat.style.color = CAT_COLOR[d.categoria];
+    document.getElementById("frontImg").innerHTML = d.svg;
+    document.getElementById("frontResumo").textContent = d.resumo;
+    document.getElementById("backName").textContent = d.nome;
+    document.getElementById("backBody").innerHTML = [
+      ["Características clínicas", d.clinico],
+      ["Localização típica", d.localizacao],
+      ["Causa / etiologia", d.etiologia],
+      ["Sintomas", d.sintomas],
+      ["Testes / vitalidade", d.testes],
+      ["Radiografia", d.radiografico],
+      ["Tratamento", d.tratamento],
+      ["Como diferenciar", d.diferenciar]
+    ].map(function(sec){
+      return '<div class="bk"><span class="lbl">'+sec[0]+'</span><p>'+sec[1]+'</p></div>';
+    }).join("");
+  }
+  function stepFlash(delta){
+    var list = filteredDiseases();
+    if(!list.length) return;
+    state.flashIndex = (state.flashIndex + delta + list.length) % list.length;
+    renderFlash();
+  }
+
+  /* ---------------- quiz ---------------- */
+  function resetQuiz(){
+    state.quizOrder = shuffle(filteredQuiz());
+    state.quizIndex = 0; state.quizScore = 0; state.quizAnswered = false;
+    document.getElementById("quizEnd").hidden = true;
+    document.getElementById("quizActive").hidden = false;
+  }
+  function renderQuiz(){
+    var list = state.quizOrder;
+    var activeBox = document.getElementById("quizActive");
+    if(!list.length){
+      activeBox.hidden = true;
+      document.getElementById("quizEnd").hidden = true;
+      return;
+    }
+    if(state.quizIndex >= list.length){
+      finishQuiz(); return;
+    }
+    activeBox.hidden = false;
+    document.getElementById("quizEnd").hidden = true;
+    var q = list[state.quizIndex];
+    document.getElementById("quizCounter").textContent = (state.quizIndex+1) + " / " + list.length;
+    document.getElementById("quizBar").style.width = Math.round((state.quizIndex)/list.length*100) + "%";
+    document.getElementById("quizScore").textContent = "Acertos: " + state.quizScore;
+    var media = document.getElementById("quizMedia");
+    if(q.kind === "image"){ media.hidden = false; media.innerHTML = '<div class="dg-frame">'+q.svg+'</div>'; }
+    else { media.hidden = true; media.innerHTML = ""; }
+    document.getElementById("quizPrompt").textContent = q.prompt;
+    var wrap = document.getElementById("quizOptions");
+    wrap.innerHTML = "";
+    var letters = ["A","B","C","D"];
+    q.options.forEach(function(opt, i){
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "qopt";
+      b.innerHTML = '<span class="k">'+letters[i]+'</span><span>'+opt+'</span>';
+      b.addEventListener("click", function(){ answerQuiz(opt, b); });
+      wrap.appendChild(b);
+    });
+    document.getElementById("quizFeedback").hidden = true;
+    document.getElementById("quizNext").hidden = true;
+    state.quizAnswered = false;
+  }
+  function answerQuiz(chosen, btnEl){
+    if(state.quizAnswered) return;
+    state.quizAnswered = true;
+    var q = state.quizOrder[state.quizIndex];
+    var correct = chosen === q.correct;
+    if(correct) state.quizScore++;
+    Array.prototype.forEach.call(document.querySelectorAll(".qopt"), function(b){
+      b.disabled = true;
+      var label = b.querySelector("span:last-child").textContent;
+      if(label === q.correct) b.dataset.state = "correct";
+      else if(b === btnEl) b.dataset.state = "wrong";
+    });
+    var fb = document.getElementById("quizFeedback");
+    fb.hidden = false;
+    fb.className = "quiz-feedback " + (correct ? "ok" : "bad");
+    fb.innerHTML = "<b>" + (correct ? "Correto." : "Não é isso.") + "</b> " + q.explain;
+    document.getElementById("quizScore").textContent = "Acertos: " + state.quizScore;
+    document.getElementById("quizNext").hidden = false;
+  }
+  function finishQuiz(){
+    document.getElementById("quizActive").hidden = true;
+    var end = document.getElementById("quizEnd");
+    end.hidden = false;
+    var total = state.quizOrder.length;
+    document.getElementById("quizFinalScore").textContent = state.quizScore + "/" + total;
+    var pct = total ? Math.round(state.quizScore/total*100) : 0;
+    var msg = pct >= 80 ? "Muito bem — você está pronto(a) para a prova."
+             : pct >= 50 ? "Bom começo. Revise os cartões das questões erradas."
+             : "Vale revisar os flashcards antes de tentar de novo.";
+    document.getElementById("quizFinalMsg").textContent = pct + "% de acertos. " + msg;
+  }
+
+  /* ---------------- table ---------------- */
+  function renderTable(){
+    var q = (document.getElementById("tableSearch").value || "").toLowerCase();
+    var list = filteredDiseases().filter(function(d){
+      if(!q) return true;
+      var hay = [d.nome, d.aparenciaCurta, d.localizacao, d.causaCurta, d.tratamentoCurto, d.clinico].join(" ").toLowerCase();
+      return hay.indexOf(q) !== -1;
+    });
+    var tbody = document.getElementById("tableBody");
+    if(!list.length){
+      tbody.innerHTML = '<tr><td colspan="6" class="empty-msg">Nenhuma doença encontrada.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = list.map(function(d){
+      return '<tr>'
+        + '<td class="cat-dot"><span class="dot" style="background:'+CAT_COLOR[d.categoria]+'" title="'+CAT_LABEL[d.categoria]+'"></span></td>'
+        + '<td class="name">'+d.nome+'</td>'
+        + '<td>'+d.aparenciaCurta+'</td>'
+        + '<td>'+d.localizacao+'</td>'
+        + '<td>'+d.causaCurta+'</td>'
+        + '<td>'+d.tratamentoCurto+'</td>'
+        + '</tr>';
+    }).join("");
+  }
+
+  /* ---------------- mode switching ---------------- */
+  function renderAll(){
+    if(state.mode === "flashcards"){ if(!state.flashOrder.length) resetFlash(); renderFlash(); }
+    if(state.mode === "quiz"){ if(!state.quizOrder.length) resetQuiz(); renderQuiz(); }
+    if(state.mode === "table"){ renderTable(); }
+  }
+  function setMode(mode){
+    state.mode = mode; storage("pp_mode", mode);
+    Array.prototype.forEach.call(document.querySelectorAll(".modebar button"), function(b){
+      var on = b.dataset.mode === mode;
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    ["flashcards","quiz","table"].forEach(function(m){
+      document.getElementById("view-"+m).classList.toggle("active", m === mode);
+    });
+    renderAll();
+  }
+
+  /* ---------------- wire up ---------------- */
+  Array.prototype.forEach.call(document.querySelectorAll(".modebar button"), function(b){
+    b.addEventListener("click", function(){ setMode(b.dataset.mode); });
+  });
+  document.getElementById("flashcard").addEventListener("click", function(){
+    var flipped = this.dataset.flipped === "true";
+    this.dataset.flipped = flipped ? "false" : "true";
+  });
+  document.getElementById("flipBtn").addEventListener("click", function(){
+    document.getElementById("flashcard").click();
+  });
+  document.getElementById("prevBtn").addEventListener("click", function(){ stepFlash(-1); });
+  document.getElementById("nextBtn").addEventListener("click", function(){ stepFlash(1); });
+  document.getElementById("shuffleBtn").addEventListener("click", function(){
+    state.flashOrder = shuffle(state.flashOrder); state.flashIndex = 0; renderFlash();
+  });
+  document.getElementById("quizNext").addEventListener("click", function(){
+    state.quizIndex++; renderQuiz();
+  });
+  document.getElementById("quizRestart").addEventListener("click", function(){
+    resetQuiz(); renderQuiz();
+  });
+  document.getElementById("tableSearch").addEventListener("input", renderTable);
+  document.addEventListener("keydown", function(e){
+    if(state.mode !== "flashcards") return;
+    if(e.key === "ArrowLeft") stepFlash(-1);
+    if(e.key === "ArrowRight") stepFlash(1);
+    if(e.key === " "){ e.preventDefault(); document.getElementById("flashcard").click(); }
+  });
+
+  renderChips();
+  setMode(state.mode);
+})();
+</script>
