@@ -13,13 +13,6 @@
     "source": "https://commons.wikimedia.org/wiki/File:Abscessed_tooth_periapical_radiograph.jpg",
     "caption": "Radiografia periapical do dente 3.6 mostrando abscesso periapical envolvendo as duas raízes."
   },
-  "granuloma_periapical": {
-    "file": "images/granuloma_periapical.jpg",
-    "license": "CC BY-SA 4.0",
-    "author": "Anna.Massini",
-    "source": "https://commons.wikimedia.org/wiki/File:Granuloma_sotto_dente_gi%C3%A0_devitalizzato_-_visione_di_lastra_su_schermo.jpg",
-    "caption": "Radiografia de dente tratado endodonticamente mostrando granuloma periapical."
-  },
   "abscesso_periapical_cronico": {
     "file": "images/abscesso_periapical_cronico.jpg",
     "license": "CC BY-SA 3.0",
@@ -33,5 +26,47 @@
     "author": "Suyash Dwivedi",
     "source": "https://commons.wikimedia.org/wiki/File:Dental_Caries_Cavity_2.JPG",
     "caption": "Cavidade de cárie profunda em molar — lesão típica que pode causar pulpite reversível."
+  },
+  "cisto_radicular": {
+    "file": "images/cisto_radicular.jpg",
+    "license": "CC BY-SA 4.0",
+    "author": "Shaimaa Abdellatif",
+    "source": "https://commons.wikimedia.org/wiki/File:Periapical_radiolucency.jpg",
+    "caption": "Radiografia periapical com radioluscencia e perda ossea nas raizes de dois incisivos - representativo de cisto radicular."
+  },
+  "celulite_facial": {
+    "file": "images/celulite_facial.jpg",
+    "license": "CC BY-SA 3.0",
+    "author": "Egoite",
+    "source": "https://commons.wikimedia.org/wiki/File:Abces_dentaire.jpg",
+    "caption": "Tumefacao facial progressiva por celulite/abscesso odontogenico."
+  },
+  "angina_ludwig": {
+    "file": "images/angina_ludwig.jpg",
+    "license": "CC BY 2.0",
+    "author": "Kulkarni, Pai, Bhattarai, Rao, Ambareesha",
+    "source": "https://commons.wikimedia.org/wiki/File:Ludwig_angina.jpg",
+    "caption": "Tumefacao submandibular bilateral em paciente com Angina de Ludwig."
+  },
+  "osteomielite_cronica": {
+    "file": "images/osteomielite_cronica.jpg",
+    "license": "CC BY 4.0",
+    "author": "Silva, Bueno, Yamamoto-Silva, Gomez, Peters, Estrela",
+    "source": "https://commons.wikimedia.org/wiki/File:Jaw_lesions_-_Chronic_osteomyelitis_-_Cone_beam_CT.jpg",
+    "caption": "Tomografia cone-beam de osteomielite cronica: lesao esclerotica mista na regiao de molares inferiores."
+  },
+  "osteite_condensante": {
+    "file": "images/osteite_condensante.jpg",
+    "license": "CC BY 4.0",
+    "author": "Silva, Bueno, Yamamoto-Silva, Gomez, Peters, Estrela",
+    "source": "https://commons.wikimedia.org/wiki/File:Jaw_lesions_-_Condensing_osteitis_-_Cone_beam_CT.jpg",
+    "caption": "Tomografia cone-beam mostrando osteite condensante: lesao radiopaca difusa no apice de molar inferior."
+  },
+  "osteite_alveolar": {
+    "file": "images/osteite_alveolar.jpg",
+    "license": "CC BY 3.0",
+    "author": "Beatgoddess",
+    "source": "https://commons.wikimedia.org/wiki/File:Alveolar_osteitis_labeled_dry_socket.jpg",
+    "caption": "Fotografia clinica de alveolo seco (osteite alveolar) pos-exodontia."
   }
 }
