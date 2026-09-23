@@ -941,6 +941,98 @@ DISEASES = [
 DISEASE_BY_ID = {d["id"]: d for d in DISEASES}
 
 # ----------------------------------------------------------------------
+# TABELA COMPARATIVA (campos curtos e padronizados para a planilha/PDF
+# comparativo e para a visao "tabela" do site - preenchidos a partir do
+# conteudo clinico/testes/radiografico ja descrito acima)
+# ----------------------------------------------------------------------
+COMPARISON_EXTRA = {
+    "pulpite_reversivel": dict(
+        dor="Provocada, curta (frio/doce); cessa ao remover estimulo",
+        mobilidade="Ausente", percussao="Ausente/negativa", necrose="Nao",
+        vitalidade="Positiva", radiografia_curta="Sem alteracao (pode haver carie visivel)"),
+    "pulpite_irreversivel": dict(
+        dor="Espontanea, continua, pulsatil; doi ao calor, alivia no frio",
+        mobilidade="Ausente", percussao="Geralmente normal", necrose="Nao (ainda vital)",
+        vitalidade="Positiva (ou ausente em fase final)",
+        radiografia_curta="Geralmente normal; pode alargar discretamente o LP apical"),
+    "pulpite_hiperplasica": dict(
+        dor="Assintomatica; sensivel a mastigacao", mobilidade="Ausente",
+        percussao="Ausente", necrose="Nao (tecido vital)", vitalidade="Positiva",
+        radiografia_curta="Grande destruicao coronaria; apice geralmente aberto"),
+    "necrose_pulpar": dict(
+        dor="Assintomatica ou variavel", mobilidade="Ausente (geralmente)",
+        percussao="Ausente inicialmente", necrose="Sim (total)", vitalidade="Negativa (nenhum teste)",
+        radiografia_curta="Pode nao mostrar alteracao inicialmente"),
+    "calcificacoes_pulpares": dict(
+        dor="Assintomatica", mobilidade="Ausente", percussao="Ausente",
+        necrose="Nao", vitalidade="Positiva (pode diminuir)",
+        radiografia_curta="Radiopacidade puntiforme/nodular intrapulpar"),
+    "periodontite_apical_aguda": dict(
+        dor="A percussao/oclusao; pode ocorrer em dente VITAL", mobilidade="Ausente/leve",
+        percussao="Positiva, dolorosa", necrose="Variavel (pode ser vital)",
+        vitalidade="Negativa ou positiva retardada", radiografia_curta="Geralmente normal; discreto alargamento do LP"),
+    "abscesso_periapical_agudo": dict(
+        dor="Intensa, espontanea, pulsatil", mobilidade="Presente (extrusao)",
+        percussao="Extrema", necrose="Sim", vitalidade="Negativa",
+        radiografia_curta="Pode ser normal ou radioluscencia mal definida"),
+    "granuloma_periapical": dict(
+        dor="Assintomatica", mobilidade="Ausente", percussao="Normal",
+        necrose="Sim", vitalidade="Negativa",
+        radiografia_curta="Radioluscencia arredondada BEM definida"),
+    "cisto_radicular": dict(
+        dor="Assintomatica", mobilidade="Ausente (exceto lesoes grandes)", percussao="Normal",
+        necrose="Sim", vitalidade="Negativa",
+        radiografia_curta="Radioluscencia bem delimitada, pode ser extensa"),
+    "cisto_radicular_lateral": dict(
+        dor="Assintomatica", mobilidade="Ausente", percussao="Normal",
+        necrose="Sim", vitalidade="Negativa",
+        radiografia_curta="Radioluscencia bem delimitada na LATERAL da raiz"),
+    "cisto_residual": dict(
+        dor="Assintomatica", mobilidade="N/A (area edentula)", percussao="N/A",
+        necrose="N/A", vitalidade="N/A (sem dente associado)",
+        radiografia_curta="Radioluscencia bem delimitada em rebordo edentulo"),
+    "abscesso_periapical_cronico": dict(
+        dor="Assintomatica (silenciosa)", mobilidade="Ausente", percussao="Normal",
+        necrose="Sim", vitalidade="Negativa",
+        radiografia_curta="Radioluscencia SEM limites definidos"),
+    "celulite_facial": dict(
+        dor="Difusa, quente, dolorosa", mobilidade="N/A (tecido mole)",
+        percussao="Dente causador: negativa", necrose="Dente causador: sim",
+        vitalidade="Dente causador: negativa", radiografia_curta="Depende do dente causador"),
+    "trombose_seio_cavernoso": dict(
+        dor="Ocular intensa + cefaleia", mobilidade="N/A", percussao="N/A",
+        necrose="N/A", vitalidade="N/A",
+        radiografia_curta="Nao avaliada por periapical; requer TC/RM"),
+    "angina_ludwig": dict(
+        dor="Cervical/assoalho bucal", mobilidade="N/A", percussao="N/A",
+        necrose="N/A", vitalidade="N/A",
+        radiografia_curta="Nao e o foco diagnostico inicial (emergencia)"),
+    "osteomielite_aguda": dict(
+        dor="Sensibilidade e tumefacao", mobilidade="Pode haver",
+        percussao="Variavel", necrose="Ossea (espacos medulares)",
+        vitalidade="Dente causador: negativa", radiografia_curta="Pode nao revelar alteracao inicial"),
+    "osteomielite_cronica": dict(
+        dor="Branda, com tumefacao", mobilidade="Pode haver perda dentaria",
+        percussao="Variavel", necrose="Ossea, com sequestro",
+        vitalidade="Dente causador: negativa",
+        radiografia_curta="Radioluscencia mal definida + sequestros radiopacos"),
+    "osteite_condensante": dict(
+        dor="Indolor", mobilidade="Ausente", percussao="Normal",
+        necrose="Nao (reacao ossea)", vitalidade="Dente causador alterado (pulpite/necrose)",
+        radiografia_curta="Radiopacidade uniforme, SEM expansao"),
+    "osteomielite_garre": dict(
+        dor="Pouco dolorosa", mobilidade="Ausente", percussao="Normal",
+        necrose="Nao", vitalidade="Dente causador: variavel",
+        radiografia_curta="Laminacoes radiopacas paralelas ('casca de cebola')"),
+    "osteite_alveolar": dict(
+        dor="Intensa, 3-4 dias pos-exodontia", mobilidade="N/A", percussao="N/A",
+        necrose="N/A (perda do coagulo, nao infeccao ossea)", vitalidade="N/A",
+        radiografia_curta="Solicitada so para descartar fragmento/corpo estranho"),
+}
+for _d in DISEASES:
+    _d.update(COMPARISON_EXTRA.get(_d["id"], {}))
+
+# ----------------------------------------------------------------------
 # BANCO DE QUESTOES (quiz)
 # ----------------------------------------------------------------------
 def _img_q(qid, disease_id, distractors, explain=None):

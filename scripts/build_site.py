@@ -43,6 +43,12 @@ def disease_payload(d):
         "aparenciaCurta": d["aparencia_curta"],
         "causaCurta": d["causa_curta"],
         "tratamentoCurto": d["tratamento_curto"],
+        "dor": d.get("dor", ""),
+        "mobilidade": d.get("mobilidade", ""),
+        "percussao": d.get("percussao", ""),
+        "necrose": d.get("necrose", ""),
+        "vitalidade": d.get("vitalidade", ""),
+        "radiografiaCurta": d.get("radiografia_curta", ""),
     }
     if d["id"] in CREDITS:
         out["foto"] = CREDITS[d["id"]]
@@ -106,6 +112,15 @@ def build():
     # arquivos de deploy / documentacao
     shutil.copyfile(os.path.join(HERE, "vercel.json"), os.path.join(OUT_DIR, "vercel.json"))
     shutil.copyfile(os.path.join(HERE, "SITE_README.md"), os.path.join(OUT_DIR, "README.md"))
+
+    # PDFs para download direto pelo site (gerados por build_pdf.py / build_comparison_pdf.py)
+    PROJECT_ROOT = os.path.join(HERE, "..")
+    for pdf_name in ("Guia_Revisao_Doencas_Polpa_Periapice.pdf", "Planilha_Comparativa_Patologias.pdf"):
+        src_pdf = os.path.join(PROJECT_ROOT, pdf_name)
+        if os.path.exists(src_pdf):
+            shutil.copyfile(src_pdf, os.path.join(OUT_DIR, pdf_name))
+        else:
+            print(f"AVISO: {pdf_name} nao encontrado - rode build_pdf.py / build_comparison_pdf.py antes.")
 
     total = sum(os.path.getsize(os.path.join(root, f))
                 for root, _, files in os.walk(OUT_DIR) for f in files)
