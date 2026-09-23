@@ -1,3 +1,4 @@
 __pycache__/
 *.pyc
 scripts/site_src/images/_raw_*
+scripts/extracted_slides/

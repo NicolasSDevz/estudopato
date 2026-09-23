@@ -1,72 +1,135 @@
 {
-  "necrose_pulpar": {
-    "file": "images/necrose_pulpar.jpg",
-    "license": "CC BY-SA 3.0",
-    "author": "Michele Gardini (anotação: Lesion)",
-    "source": "https://commons.wikimedia.org/wiki/File:Chronic_apical_periodontitis.jpg",
-    "caption": "Radiografia periapical de pré-molar com perda óssea apical (seta) — consequência radiográfica da necrose pulpar."
-  },
-  "abscesso_periapical_agudo": {
-    "file": "images/abscesso_periapical_agudo.jpg",
-    "license": "CC BY-SA 3.0",
-    "author": "Coronation Dental Specialty Group",
-    "source": "https://commons.wikimedia.org/wiki/File:Abscessed_tooth_periapical_radiograph.jpg",
-    "caption": "Radiografia periapical do dente 3.6 mostrando abscesso periapical envolvendo as duas raízes."
-  },
-  "abscesso_periapical_cronico": {
-    "file": "images/abscesso_periapical_cronico.jpg",
-    "license": "CC BY-SA 3.0",
-    "author": "Damdent",
-    "source": "https://commons.wikimedia.org/wiki/File:Abces_parulique.jpg",
-    "caption": "Fístula gengival ativa (parúlide) drenando abscesso periapical crônico."
-  },
   "pulpite_reversivel": {
     "file": "images/pulpite_reversivel.jpg",
-    "license": "CC BY-SA 4.0",
-    "author": "Suyash Dwivedi",
-    "source": "https://commons.wikimedia.org/wiki/File:Dental_Caries_Cavity_2.JPG",
-    "caption": "Cavidade de cárie profunda em molar — lesão típica que pode causar pulpite reversível."
+    "license": "Uso educacional (material de aula)",
+    "author": "Profa. Ângela Catarina Maragno",
+    "source": "Slides da aula — Doenças da Polpa e Periápice (Profa. Ângela Catarina Maragno, Patologia Bucal, UNESC)",
+    "caption": "Teste de sensibilidade ao frio realizado em incisivo (slide de aula)."
+  },
+  "pulpite_irreversivel": {
+    "file": "images/pulpite_irreversivel.jpg",
+    "license": "Uso educacional (material de aula)",
+    "author": "Profa. Ângela Catarina Maragno",
+    "source": "Slides da aula — Doenças da Polpa e Periápice (Profa. Ângela Catarina Maragno, Patologia Bucal, UNESC)",
+    "caption": "Paciente com dor pulpar aguda e espontânea (slide de aula)."
+  },
+  "pulpite_hiperplasica": {
+    "file": "images/pulpite_hiperplasica.jpg",
+    "license": "Uso educacional (material de aula)",
+    "author": "Profa. Ângela Catarina Maragno",
+    "source": "Slides da aula — Doenças da Polpa e Periápice (Profa. Ângela Catarina Maragno, Patologia Bucal, UNESC)",
+    "caption": "Pólipo pulpar em molar decíduo e radiografia correspondente (slide de aula)."
+  },
+  "calcificacoes_pulpares": {
+    "file": "images/calcificacoes_pulpares.jpg",
+    "license": "Uso educacional (material de aula)",
+    "author": "Profa. Ângela Catarina Maragno",
+    "source": "Slides da aula — Doenças da Polpa e Periápice (Profa. Ângela Catarina Maragno, Patologia Bucal, UNESC)",
+    "caption": "Radiografia com denticulo/calculo pulpar indicado pela seta (slide de aula)."
+  },
+  "periodontite_apical_aguda": {
+    "file": "images/periodontite_apical_aguda.jpg",
+    "license": "Uso educacional (material de aula)",
+    "author": "Profa. Ângela Catarina Maragno",
+    "source": "Slides da aula — Doenças da Polpa e Periápice (Profa. Ângela Catarina Maragno, Patologia Bucal, UNESC)",
+    "caption": "Radiografia periapical com aumento do espaço do ligamento periodontal (seta, slide de aula)."
+  },
+  "granuloma_periapical": {
+    "file": "images/granuloma_periapical.jpg",
+    "license": "Uso educacional (material de aula)",
+    "author": "Profa. Ângela Catarina Maragno",
+    "source": "Slides da aula — Doenças da Polpa e Periápice (Profa. Ângela Catarina Maragno, Patologia Bucal, UNESC)",
+    "caption": "Radiografia periapical com radioluscência bem definida no ápice (slide de aula)."
   },
   "cisto_radicular": {
     "file": "images/cisto_radicular.jpg",
-    "license": "CC BY-SA 4.0",
-    "author": "Shaimaa Abdellatif",
-    "source": "https://commons.wikimedia.org/wiki/File:Periapical_radiolucency.jpg",
-    "caption": "Radiografia periapical com radioluscencia e perda ossea nas raizes de dois incisivos - representativo de cisto radicular."
+    "license": "Uso educacional (material de aula)",
+    "author": "Profa. Ângela Catarina Maragno",
+    "source": "Slides da aula — Doenças da Polpa e Periápice (Profa. Ângela Catarina Maragno, Patologia Bucal, UNESC)",
+    "caption": "Peça cirúrgica: área de lesão após ostectomia (Figura 4, slide de aula)."
+  },
+  "cisto_radicular_lateral": {
+    "file": "images/cisto_radicular_lateral.jpg",
+    "license": "Uso educacional (material de aula)",
+    "author": "Profa. Ângela Catarina Maragno",
+    "source": "Slides da aula — Doenças da Polpa e Periápice (Profa. Ângela Catarina Maragno, Patologia Bucal, UNESC)",
+    "caption": "Radiografia periapical (slide de aula, seção Cisto Radicular Lateral)."
+  },
+  "cisto_residual": {
+    "file": "images/cisto_residual.jpg",
+    "license": "Uso educacional (material de aula)",
+    "author": "Profa. Ângela Catarina Maragno",
+    "source": "Slides da aula — Doenças da Polpa e Periápice (Profa. Ângela Catarina Maragno, Patologia Bucal, UNESC)",
+    "caption": "Radiografia de área radiolúcida em rebordo (slide de aula, seção Cisto Residual)."
+  },
+  "abscesso_periapical_agudo": {
+    "file": "images/abscesso_periapical_agudo.jpg",
+    "license": "Uso educacional (material de aula)",
+    "author": "Profa. Ângela Catarina Maragno",
+    "source": "Slides da aula — Doenças da Polpa e Periápice (Profa. Ângela Catarina Maragno, Patologia Bucal, UNESC)",
+    "caption": "Tumefação vestibular aguda associada a abscesso periapical (slide de aula)."
+  },
+  "abscesso_periapical_cronico": {
+    "file": "images/abscesso_periapical_cronico.jpg",
+    "license": "Uso educacional (material de aula)",
+    "author": "Profa. Ângela Catarina Maragno",
+    "source": "Slides da aula — Doenças da Polpa e Periápice (Profa. Ângela Catarina Maragno, Patologia Bucal, UNESC)",
+    "caption": "Rastreamento de fístula intraoral com cone de guta-percha (Figura 10, slide de aula)."
   },
   "celulite_facial": {
     "file": "images/celulite_facial.jpg",
-    "license": "CC BY-SA 3.0",
-    "author": "Egoite",
-    "source": "https://commons.wikimedia.org/wiki/File:Abces_dentaire.jpg",
-    "caption": "Tumefacao facial progressiva por celulite/abscesso odontogenico."
+    "license": "Uso educacional (material de aula)",
+    "author": "Profa. Ângela Catarina Maragno",
+    "source": "Slides da aula — Doenças da Polpa e Periápice (Profa. Ângela Catarina Maragno, Patologia Bucal, UNESC)",
+    "caption": "Evolução de celulite facial de origem odontogênica (slide de aula)."
+  },
+  "trombose_seio_cavernoso": {
+    "file": "images/trombose_seio_cavernoso.jpg",
+    "license": "Uso educacional (material de aula)",
+    "author": "Profa. Ângela Catarina Maragno",
+    "source": "Slides da aula — Doenças da Polpa e Periápice (Profa. Ângela Catarina Maragno, Patologia Bucal, UNESC)",
+    "caption": "Edema periorbitário em paciente com trombose de seio cavernoso (slide de aula)."
   },
   "angina_ludwig": {
     "file": "images/angina_ludwig.jpg",
-    "license": "CC BY 2.0",
-    "author": "Kulkarni, Pai, Bhattarai, Rao, Ambareesha",
-    "source": "https://commons.wikimedia.org/wiki/File:Ludwig_angina.jpg",
-    "caption": "Tumefacao submandibular bilateral em paciente com Angina de Ludwig."
+    "license": "Uso educacional (material de aula)",
+    "author": "Profa. Ângela Catarina Maragno",
+    "source": "Slides da aula — Doenças da Polpa e Periápice (Profa. Ângela Catarina Maragno, Patologia Bucal, UNESC)",
+    "caption": "Tumefação volumosa do pescoço em Angina de Ludwig (slide de aula)."
+  },
+  "osteomielite_aguda": {
+    "file": "images/osteomielite_aguda.jpg",
+    "license": "Uso educacional (material de aula)",
+    "author": "Profa. Ângela Catarina Maragno",
+    "source": "Slides da aula — Doenças da Polpa e Periápice (Profa. Ângela Catarina Maragno, Patologia Bucal, UNESC)",
+    "caption": "Radiografia panorâmica com área de osteomielite aguda destacada (slide de aula)."
   },
   "osteomielite_cronica": {
     "file": "images/osteomielite_cronica.jpg",
-    "license": "CC BY 4.0",
-    "author": "Silva, Bueno, Yamamoto-Silva, Gomez, Peters, Estrela",
-    "source": "https://commons.wikimedia.org/wiki/File:Jaw_lesions_-_Chronic_osteomyelitis_-_Cone_beam_CT.jpg",
-    "caption": "Tomografia cone-beam de osteomielite cronica: lesao esclerotica mista na regiao de molares inferiores."
+    "license": "Uso educacional (material de aula)",
+    "author": "Profa. Ângela Catarina Maragno",
+    "source": "Slides da aula — Doenças da Polpa e Periápice (Profa. Ângela Catarina Maragno, Patologia Bucal, UNESC)",
+    "caption": "Caso clínico de osteomielite crônica: face, intraoral e radiografia (slide de aula)."
   },
   "osteite_condensante": {
     "file": "images/osteite_condensante.jpg",
-    "license": "CC BY 4.0",
-    "author": "Silva, Bueno, Yamamoto-Silva, Gomez, Peters, Estrela",
-    "source": "https://commons.wikimedia.org/wiki/File:Jaw_lesions_-_Condensing_osteitis_-_Cone_beam_CT.jpg",
-    "caption": "Tomografia cone-beam mostrando osteite condensante: lesao radiopaca difusa no apice de molar inferior."
+    "license": "Uso educacional (material de aula)",
+    "author": "Profa. Ângela Catarina Maragno",
+    "source": "Slides da aula — Doenças da Polpa e Periápice (Profa. Ângela Catarina Maragno, Patologia Bucal, UNESC)",
+    "caption": "Radiografia com área radiopaca compatível com osteíte condensante (slide de aula)."
+  },
+  "osteomielite_garre": {
+    "file": "images/osteomielite_garre.jpg",
+    "license": "Uso educacional (material de aula)",
+    "author": "Profa. Ângela Catarina Maragno",
+    "source": "Slides da aula — Doenças da Polpa e Periápice (Profa. Ângela Catarina Maragno, Patologia Bucal, UNESC)",
+    "caption": "Tomografia (corte axial) mostrando laminação óssea em “casca de cebola” (slide de aula)."
   },
   "osteite_alveolar": {
     "file": "images/osteite_alveolar.jpg",
-    "license": "CC BY 3.0",
-    "author": "Beatgoddess",
-    "source": "https://commons.wikimedia.org/wiki/File:Alveolar_osteitis_labeled_dry_socket.jpg",
-    "caption": "Fotografia clinica de alveolo seco (osteite alveolar) pos-exodontia."
+    "license": "Uso educacional (material de aula)",
+    "author": "Profa. Ângela Catarina Maragno",
+    "source": "Slides da aula — Doenças da Polpa e Periápice (Profa. Ângela Catarina Maragno, Patologia Bucal, UNESC)",
+    "caption": "Alvéolo seco (osteíte alveolar) após exodontia (slide de aula)."
   }
 }

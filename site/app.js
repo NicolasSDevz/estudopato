@@ -84,9 +84,13 @@
   }
   function creditHTML(d) {
     if (!d.foto) return "";
+    var isUrl = /^https?:\/\//.test(d.foto.source || "");
+    var srcHTML = isUrl
+      ? '<a href="' + d.foto.source + '" target="_blank" rel="noopener">fonte</a>'
+      : d.foto.source;
     return '<p style="font-size:11px;color:var(--ink-faint);text-align:center;margin:6px 0 0;line-height:1.4;">' +
       'Foto: ' + d.foto.author + " &middot; " + d.foto.license +
-      ' &middot; <a href="' + d.foto.source + '" target="_blank" rel="noopener">fonte</a></p>';
+      " &middot; " + srcHTML + "</p>";
   }
 
   /* ---------------- chips ---------------- */
